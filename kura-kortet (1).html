@@ -1,0 +1,1935 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kura-kortet forklaret</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Civic web style: hvide flader, koksgrå tekst, én grøn accent til låg, linjer og runde ikoner. Skarpe hjørner, ingen skygger.
+     Layout: header → menu mellem hårlinje og grøn linje → demo med fælleskort og institutionskort → pipeline på gråt panel → argumenter → compute → forbehold på gråt panel → næste skridt → footer i footergrå med grøn bundbjælke */
+  --green:#066B43; --ink:#343536; --ink-2:#55565A; --surface:#FFFFFF; --panel:#F3F2F2;
+  --card-border:#E8E6E6; --hairline:#CAC8C8; --footer:#55565A; --placeholder:#DCE5E0; --bubble:#DCE5E0;
+  --f-body:"Open Sans","Helvetica Neue",Helvetica,Roboto,Arial,sans-serif;
+  --f-mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
+  --ico-right-green:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23066B43' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h13M13 6l6 6-6 6'/%3E%3C/svg%3E");
+  --ico-right-white:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h13M13 6l6 6-6 6'/%3E%3C/svg%3E");
+  --ico-left-green:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23066B43' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 12H6M11 6l-6 6 6 6'/%3E%3C/svg%3E");
+  --ico-up-green:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23066B43' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 19V6M6 11l6-6 6 6'/%3E%3C/svg%3E");
+  --ico-down-white:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v13M6 13l6 6 6-6'/%3E%3C/svg%3E");
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--surface);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.625;-webkit-font-smoothing:antialiased}
+p,li,dd{hyphens:auto;-webkit-hyphens:auto}
+a{color:var(--ink);font-weight:700;text-decoration:none}
+a:hover{text-decoration:underline;text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+h1,h2,h3,h4{text-wrap:balance;margin:0;color:var(--ink);font-weight:600}
+h1{font-size:44px;line-height:1.15}
+h2{font-size:30px;line-height:1.25}
+h3{font-size:21px;line-height:1.35}
+h4{font-size:16px;line-height:1.4;font-weight:700;margin-bottom:10px}
+p{margin:0}
+code{font-family:var(--f-mono);font-size:.9em}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* Header */
+.masthead{padding:40px 0 32px}
+.eyebrow{font-size:15px;font-weight:600;color:var(--ink-2);margin-bottom:12px}
+.masthead .lede{font-size:19px;line-height:30px;max-width:64ch;margin-top:14px}
+.tldr{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;margin-top:28px}
+.tldr > div{background:var(--surface);border:1px solid var(--card-border);border-top:3px solid var(--green);padding:16px 18px 18px;display:grid;gap:4px;align-content:start}
+.tldr b{font-size:17px;font-weight:600}
+.tldr p{font-size:16px;line-height:26px}
+.fiction{display:inline-flex;align-items:center;gap:8px;margin-top:22px;padding:8px 14px;background:var(--panel);font-size:15px;font-weight:600}
+sup a{font-size:.8em;padding:0 1px}
+
+/* Hovedmenu */
+.topnav{position:sticky;top:0;z-index:20;background:var(--surface);border-top:1px solid var(--hairline);border-bottom:1px solid var(--green)}
+.topnav .wrap{display:flex;align-items:center;gap:16px;min-height:56px;flex-wrap:wrap;padding-top:6px;padding-bottom:6px}
+.topnav nav{display:flex;gap:2px 24px;flex-wrap:wrap;flex:1}
+.topnav nav a{font-size:17px;font-weight:400;padding:6px 0}
+.seg{display:inline-flex;border:1px solid var(--hairline);background:var(--surface)}
+.seg button{font:inherit;font-size:15px;font-weight:600;border:0;background:transparent;color:var(--ink);padding:6px 12px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--hairline)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.seg-label{font-size:14px;color:var(--ink-2);font-weight:600}
+.viewctl{display:flex;align-items:center;gap:8px}
+
+/* Sektioner */
+section.part{padding:56px 0 24px}
+section.part.band{background:var(--panel);padding:56px 0;margin-top:40px}
+.part-head{display:grid;gap:10px;margin-bottom:28px;max-width:72ch}
+.part-head p{font-size:17px;line-height:28px}
+
+/* Pipeline */
+.roadmap{display:grid;grid-template-columns:minmax(270px,340px) minmax(0,1fr);gap:28px;align-items:start}
+.stages{position:sticky;top:72px}
+.legend-row{display:flex;flex-wrap:wrap;gap:8px 14px;margin-bottom:12px;font-size:14px;color:var(--ink-2);align-items:center}
+.legend-row span{display:inline-flex;align-items:center;gap:6px}
+.stage-list{list-style:none;margin:0;padding:0;display:grid;gap:8px;position:relative}
+.stage-list::before{content:"";position:absolute;left:28px;top:26px;bottom:26px;width:1px;background:var(--hairline)}
+.stage-btn{position:relative;display:grid;grid-template-columns:32px minmax(0,1fr) auto;gap:12px;align-items:center;width:100%;padding:10px 12px;border:1px solid var(--card-border);background:var(--surface);color:inherit;font:inherit;text-align:left;cursor:pointer}
+.stage-btn:hover{border-color:var(--hairline)}
+.stage-btn[aria-current="step"]{border-color:var(--green);box-shadow:inset 4px 0 0 var(--green)}
+.num{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:2px solid var(--green);color:var(--ink);font-weight:700;font-size:14px;font-variant-numeric:tabular-nums}
+.stage-btn[aria-current="step"] .num{background:var(--green);color:var(--surface)}
+.st-title{display:block;font-weight:600;font-size:15px;line-height:1.3}
+.st-sub{display:block;font-size:13px;color:var(--ink-2);line-height:1.35;margin-top:2px}
+.tag{display:inline-flex;align-items:center;font-size:12px;font-weight:700;padding:1px 7px;white-space:nowrap;border:1px solid var(--ink);color:var(--ink);background:var(--surface);line-height:1.5}
+.tag[data-type="llm"],.tag[data-type="mix"]{background:var(--ink);color:var(--surface)}
+.tag[data-type="data"],.tag[data-type="view"]{background:var(--panel);border-color:var(--hairline)}
+.subchips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;align-items:center}
+.subchip{font-size:11px;font-weight:700;padding:0 6px;border:1px solid var(--ink);color:var(--ink);background:var(--surface);line-height:1.6}
+.subchip[data-type="llm"]{background:var(--ink);color:var(--surface)}
+.loopnote{font-size:12px;color:var(--ink-2);font-weight:700}
+
+.detail{background:var(--surface);border:1px solid var(--card-border);border-top:3px solid var(--green);padding:28px 30px 24px;min-width:0}
+.detail-head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;color:var(--ink-2);font-size:14px;font-weight:600}
+.detail h3{margin-top:10px;font-size:26px;line-height:1.3}
+.fn{overflow-wrap:anywhere;font-family:var(--f-mono);font-size:12.5px;background:var(--panel);border:1px solid var(--card-border);padding:2px 8px;color:var(--ink);font-weight:500}
+.detail .lede{font-size:18px;line-height:29px;max-width:68ch;margin-top:10px}
+.block{margin-top:26px}
+.algo{margin:0;padding:0;list-style:none;counter-reset:a;display:grid;gap:10px;max-width:72ch}
+.algo li{counter-increment:a;display:grid;grid-template-columns:26px 1fr;gap:6px;align-items:start}
+.algo li::before{content:counter(a) ".";font-weight:700;font-variant-numeric:tabular-nums}
+.note{font-size:14px;color:var(--ink-2);margin-top:10px;max-width:72ch;line-height:1.55}
+.io{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.io-card{border:1px solid var(--card-border);padding:14px;background:var(--panel);min-width:0;display:flex;flex-direction:column;gap:10px}
+.io-label{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700}
+.io-label b{display:inline-grid;place-items:center;min-width:34px;height:22px;padding:0 8px;background:var(--ink);color:var(--surface);font-size:12px}
+.io-card .sub{font-size:14px;color:var(--ink-2)}
+pre.code{margin:0;background:var(--surface);border:1px solid var(--card-border);padding:12px 14px;font-family:var(--f-mono);font-size:12.5px;line-height:1.55;white-space:pre-wrap;word-break:break-word;color:var(--ink);overflow-x:auto}
+pre.code .c{color:var(--ink-2)}
+pre.code .k{font-weight:700}
+mark.pii{background:transparent;color:inherit;font-weight:700;text-decoration:underline 2px var(--green);text-underline-offset:3px}
+.chat{display:grid;gap:8px}
+.msg{border:1px solid var(--card-border);padding:8px 10px;background:var(--surface);font-size:14px;line-height:1.55}
+.msg.bot{border-left:3px solid var(--hairline)}
+.who{display:block;font-size:12px;font-weight:700;color:var(--ink-2);margin-bottom:2px}
+.keyline{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2)}
+.keyline i{display:inline-block;width:18px;height:0;border-bottom:2px solid var(--green)}
+.plist{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.plist li{font-size:14px;line-height:1.45;padding:8px 10px;border:1px solid var(--card-border);background:var(--surface)}
+.plist li.me{border-color:var(--green);box-shadow:inset 4px 0 0 var(--green)}
+.plist .meta{display:block;font-size:12px;font-weight:700;margin-top:2px}
+.plist li.more{background:transparent;border-style:dashed;border-color:var(--hairline);color:var(--ink-2)}
+.mini-h{font-size:12px;font-weight:700;color:var(--ink-2);margin-bottom:-2px}
+.tree{margin:0;padding:0;list-style:none;font-size:14px;line-height:1.4;display:grid;gap:4px}
+.tree li{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:baseline;padding-left:calc(var(--d) * 9px)}
+.tree .lvl{font-size:11px;font-weight:700;color:var(--ink-2);min-width:52px}
+.tree .cnt{font-variant-numeric:tabular-nums;font-size:13px}
+.tree li.me{font-weight:700}
+.smart{margin:0;padding:0;list-style:none;display:grid;gap:10px;max-width:72ch}
+.smart li{display:grid;grid-template-columns:22px 1fr;gap:8px}
+.smart svg{color:var(--green);margin-top:4px}
+.say blockquote{margin:0;border-top:3px solid var(--green);background:var(--panel);padding:14px 18px;font-size:19px;line-height:30px;color:var(--ink);max-width:68ch}
+.params{display:grid;grid-template-columns:minmax(150px,auto) 1fr;gap:6px 16px;margin:0;font-size:14px}
+.params dt{color:var(--ink-2);font-weight:600}
+.params dd{margin:0;font-family:var(--f-mono);font-size:13px;color:var(--ink)}
+.pitfalls{margin:0;padding:0;list-style:none;display:grid;gap:10px;max-width:74ch}
+.pitfalls li{display:grid;grid-template-columns:22px 1fr;gap:8px;font-size:15px}
+.pitfalls svg{color:var(--ink);margin-top:4px}
+.tech-only{display:none}
+body[data-view="teknisk"] .tech-only{display:block}
+body[data-view="teknisk"] .overview-only{display:none}
+.hint{margin-top:22px;font-size:14px;color:var(--ink-2)}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:30px;padding-top:18px;border-top:1px solid var(--card-border);flex-wrap:wrap}
+
+/* Knapper: alt, man kan klikke på, har et rundt ikon */
+.btn{font:inherit;font-size:15px;font-weight:700;padding:8px 14px 8px 10px;border:1px solid var(--hairline);background:var(--surface);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:10px;text-decoration:none;line-height:1.3}
+.btn:hover{border-color:var(--ink);text-decoration:none}
+.btn::before{content:"";flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--green);background:var(--surface) var(--ico-right-green) center/14px no-repeat}
+.btn.primary::before{background:var(--green) var(--ico-right-white) center/14px no-repeat}
+.btn.back::before{background-image:var(--ico-left-green)}
+.btn.up::before{background-image:var(--ico-up-green)}
+.btn.down::before{background:var(--green) var(--ico-down-white) center/14px no-repeat}
+.btn:disabled{opacity:.45;cursor:default}
+
+/* Ekstra visninger i trinene */
+.sim{display:grid;gap:8px}
+.sim-row{display:grid;grid-template-columns:minmax(0,1fr) 120px 40px;gap:10px;align-items:center;font-size:14px}
+.sim-bar{height:8px;background:var(--card-border);overflow:hidden}
+.sim-bar span{display:block;height:100%;background:var(--green)}
+.sim-v{font-variant-numeric:tabular-nums;font-weight:700;text-align:right}
+.km{border:1px solid var(--card-border);padding:12px;background:var(--panel)}
+.km svg{display:block;width:100%;height:auto;max-height:260px;background:var(--surface)}
+.km circle.k0{fill:var(--ink);stroke:var(--surface);stroke-width:1.5}
+.km rect.k1{fill:var(--green);stroke:var(--surface);stroke-width:1.5}
+.km circle.k2{fill:var(--surface);stroke:var(--ink);stroke-width:2}
+.km circle.kn{fill:var(--hairline)}
+.km .kc{transition:transform .45s ease}
+.km .kc.k0 circle{fill:var(--ink);stroke:var(--surface);stroke-width:3}
+.km .kc.k1 rect{fill:var(--green);stroke:var(--surface);stroke-width:3}
+.km .kc.k2 circle{fill:var(--surface);stroke:var(--ink);stroke-width:3}
+.km .kc line{stroke:var(--surface);stroke-width:2.5;stroke-linecap:round}
+.km .kc.k2 line{stroke:var(--ink)}
+.km-ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.km-status{font-size:14px;margin-top:8px;min-height:2.9em}
+.km-legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--ink-2);margin-top:8px}
+.km-legend span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.loop{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.loop-step{border:1px solid var(--card-border);padding:10px;background:var(--panel);display:grid;gap:6px;align-content:start}
+.loop-step .tag{justify-self:start}
+.loop-step b{font-size:14px}
+.loop-step p{font-size:13px;line-height:1.45}
+.loop-foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:12px;font-size:13px}
+.rchip{display:inline-flex;flex-direction:column;align-items:center;padding:6px 8px;border:1px solid var(--card-border);border-top:3px solid var(--green);background:var(--surface);min-width:58px}
+.rchip small{font-size:11px;color:var(--ink-2);font-weight:600}
+.rchip strong{font-variant-numeric:tabular-nums;font-size:16px}
+.rarrow{color:var(--ink-2)}
+
+/* Klyngekortet */
+.ex-ctl{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin-bottom:14px}
+.explorer{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:24px;align-items:start}
+.map-card{position:relative;background:var(--surface);border:1px solid var(--card-border);border-top:3px solid var(--green);padding:10px}
+.map-svg{display:block;width:100%;height:auto;touch-action:manipulation}
+.map-bar{display:flex;align-items:center;gap:8px 12px;min-height:42px;padding:2px 4px 4px;flex-wrap:wrap}
+.map-where{font-size:13px;color:var(--ink-2);font-weight:600}
+.map-foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 16px;padding:6px 8px 4px;font-size:13px;color:var(--ink-2)}
+.ramp{display:inline-flex;align-items:center;gap:8px}
+.ramp i{display:inline-block;width:110px;height:10px;border:1px solid var(--card-border)}
+.bubble{cursor:pointer}
+.bubble:focus{outline:none}
+.bubble .ring{fill:none;stroke:var(--green);stroke-width:1;opacity:.5}
+.bubble:hover .ring{opacity:1;stroke-width:2.5}
+.bubble:focus-visible .ring{opacity:1;stroke-width:3}
+.bubble.sel .ring{opacity:1;stroke-width:3.5}
+.bubble .b{stroke:var(--surface);stroke-width:2}
+.bubble .dots circle{fill:var(--ink-2);opacity:.3}
+.bubble text{pointer-events:none;paint-order:stroke;stroke-linejoin:round;font-family:var(--f-body)}
+.ring-label{font-size:14px;font-weight:600;fill:var(--ink)}
+.parent-ring{fill:none;stroke:var(--hairline);stroke-dasharray:5 6}
+.tooltip{position:absolute;z-index:5;pointer-events:none;max-width:280px;background:var(--ink);color:var(--surface);padding:10px 12px;font-size:13px;line-height:1.45;opacity:0;transform:translateY(4px);transition:opacity .12s, transform .12s}
+.tooltip.on{opacity:1;transform:none}
+.tooltip b{display:block;font-size:14px;margin-bottom:2px}
+.cl-panel{background:var(--surface);border:1px solid var(--card-border);border-top:3px solid var(--green);padding:22px;min-width:0}
+.crumbs{margin-bottom:14px}
+.crumbs ol{display:flex;flex-wrap:wrap;gap:2px 4px;list-style:none;padding:0;margin:0;font-size:13px;align-items:center}
+.crumbs li{display:inline-flex;align-items:center;gap:4px}
+.crumbs li+li::before{content:"›";color:var(--ink-2)}
+.crumbs button{font:inherit;font-size:13px;font-weight:700;border:0;background:none;color:var(--ink);padding:2px 4px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.crumbs [aria-current="page"]{padding:2px 4px}
+.lvl-pill{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;background:var(--panel);margin-bottom:8px}
+.cl-panel h3{font-size:21px}
+.cl-panel .desc{margin-top:8px;font-size:15px;line-height:1.55}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:16px}
+.stat{border:1px solid var(--panel);padding:9px 11px;background:var(--panel);min-width:0}
+.stat .l{display:block;font-size:12px;font-weight:600;color:var(--ink-2);line-height:1.3}
+.stat .v{display:block;font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:2px}
+.stat .s{display:block;font-size:12px;color:var(--ink-2)}
+.stat.flag{background:var(--surface);border:1px solid var(--ink);border-top:3px solid var(--ink)}
+.flagtxt{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:var(--ink)}
+.insight{margin-top:14px;border-top:3px solid var(--green);padding:10px 12px;background:var(--panel);font-size:14px}
+.insight b{display:block;font-size:12px;margin-bottom:2px}
+.kids-h{margin-top:18px}
+.kids{list-style:none;padding:0;margin:0;display:grid;gap:6px}
+.kid-btn{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;width:100%;text-align:left;padding:9px 11px;border:1px solid var(--card-border);background:var(--surface);cursor:pointer;font:inherit;color:inherit}
+.kid-btn:hover{border-color:var(--green)}
+.kid-name{font-size:14px;font-weight:700;line-height:1.35}
+.kid-n{font-size:13px;font-variant-numeric:tabular-nums;color:var(--ink-2);white-space:nowrap}
+.kid-bar{grid-column:1/-1;height:6px;background:var(--card-border);overflow:hidden}
+.kid-bar span{display:block;height:100%;background:var(--green)}
+.examples{list-style:none;padding:0;margin:0;display:grid;gap:6px}
+.examples li{font-size:14px;padding:9px 11px;border:1px dashed var(--hairline);background:var(--panel)}
+.privacy-note{margin-top:10px;font-size:13px;color:var(--ink-2)}
+.panel-actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* Fælleskort og institutionskort */
+.sel{font:inherit;font-size:15px;font-weight:600;padding:6px 10px;border:1px solid var(--hairline);background:var(--surface);color:var(--ink);border-radius:0;max-width:100%;min-width:0;cursor:pointer}
+.sel:hover{border-color:var(--ink)}
+.inst-ctl{min-width:0;max-width:100%}
+.map-of{font-size:13px;font-weight:700;padding-bottom:10px;margin-bottom:12px;border-bottom:1px solid var(--card-border)}
+.kid-bar{position:relative;overflow:visible}
+.kid-bar i{position:absolute;top:-4px;bottom:-4px;width:2px;margin-left:-1px;background:var(--ink)}
+.kids-key{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;font-size:12px;color:var(--ink-2);margin:-4px 0 8px}
+.key-bar{display:inline-block;width:18px;height:6px;background:var(--green)}
+.key-tick{display:inline-block;width:2px;height:12px;background:var(--ink);margin-left:10px}
+.kid-hidden{font-size:13px;color:var(--ink-2);padding:8px 11px;border:1px dashed var(--hairline)}
+.nums-head{display:grid;gap:6px;margin-top:40px;max-width:72ch}
+.nums-head h3{font-size:23px}
+.nums-head p{font-size:16px;line-height:26px}
+.nums{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin-top:18px;align-items:start}
+.num-card{background:var(--surface);border:1px solid var(--card-border);border-top:3px solid var(--green);padding:20px 22px;display:grid;gap:8px;align-content:start}
+.num-card h4{font-size:19px;font-weight:600;margin:0}
+.num-card p{font-size:15px;line-height:1.55}
+.num-card .num-lead{font-size:16px;font-weight:600;margin-bottom:4px}
+.num-lbl{display:block;font-size:12px;font-weight:700;margin-top:8px}
+.scale{list-style:none;margin:2px 0 0;padding:0;display:grid;gap:4px}
+.scale li{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:10px;align-items:center;font-size:14px;line-height:1.4}
+.scale b{display:grid;place-items:center;width:26px;height:26px;border:1px solid var(--hairline);font-variant-numeric:tabular-nums}
+.scale li.on b{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.scale em{font-style:normal;font-size:12px;font-weight:700;white-space:nowrap}
+.num-ex{background:var(--panel);padding:10px 12px;font-variant-numeric:tabular-nums}
+.num-ex b{display:block;font-size:12px;margin-bottom:2px}
+.num-card .num-tech{font-size:13px;color:var(--ink-2);border-top:1px solid var(--card-border);padding-top:8px;margin-top:4px}
+.stat-help{font-size:13px;margin-top:8px}
+.maps2-head{display:grid;gap:6px;margin-top:40px;max-width:72ch}
+.maps2-head h3{font-size:23px}
+.maps2-head p{font-size:16px;line-height:26px}
+.maps2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin-top:18px}
+.map-type{background:var(--surface);border:1px solid var(--card-border);border-top:3px solid var(--green);padding:20px 22px}
+.map-type h4{font-size:19px;font-weight:600;margin-bottom:12px}
+.map-type dl{display:grid;grid-template-columns:minmax(70px,auto) 1fr;gap:8px 16px;margin:0;font-size:15px;line-height:1.55}
+.map-type dt{font-weight:700}
+.map-type dd{margin:0}
+.facts{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:12px;max-width:80ch}
+.facts li{display:grid;grid-template-columns:22px 1fr;gap:8px;font-size:15px;line-height:1.55}
+.facts svg{color:var(--green);margin-top:4px}
+
+/* Argumenter, forbehold, næste skridt */
+.why-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.why{background:var(--surface);border:1px solid var(--card-border);border-top:3px solid var(--green);padding:20px;display:grid;gap:8px;align-content:start}
+.why h3{font-size:18px}
+.why p{font-size:15px;line-height:1.55}
+.why .ico{color:var(--green)}
+.cav{display:grid;gap:12px}
+.cav-row{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);border:1px solid var(--card-border);border-top:3px solid var(--green);background:var(--surface)}
+.cav-row > div{padding:16px 18px}
+.cav-risk h3{font-size:17px;display:flex;gap:8px;align-items:flex-start}
+.cav-risk h3 svg{flex:none;color:var(--ink);margin-top:3px}
+.cav-risk p{font-size:15px;line-height:1.55;margin-top:6px}
+.cav-fix{background:var(--panel)}
+.cav-fix b{display:block;font-size:12px;font-weight:700;margin-bottom:4px}
+.cav-fix p{font-size:15px;line-height:1.55}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;counter-reset:s}
+.steps li{counter-increment:s;background:var(--surface);border:1px solid var(--card-border);border-top:3px solid var(--green);padding:18px;display:grid;gap:6px;align-content:start}
+.steps li::before{content:counter(s);width:28px;height:28px;display:grid;place-items:center;background:var(--ink);color:var(--surface);font-weight:700;font-size:14px}
+.steps h3{font-size:17px}
+.steps p{font-size:15px;line-height:1.55}
+
+/* Footer */
+footer.site{background:var(--footer);color:var(--surface);margin-top:56px}
+footer.site .wrap{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:40px;padding-top:44px;padding-bottom:44px}
+footer.site h2{color:var(--surface);font-size:23px;margin-bottom:14px}
+footer.site a{color:var(--surface);font-weight:600}
+footer.site p{color:var(--surface);font-size:15px;line-height:1.6}
+footer.site .about{display:grid;gap:10px;align-content:start}
+.sources{margin:0;padding:0;list-style:none;display:grid;gap:8px;font-size:15px}
+.sources li{position:relative;padding-left:18px}
+.sources li::before{content:"›";position:absolute;left:0;top:0;font-weight:700}
+.sources span{color:#E8E6E6}
+.greenbar{background:var(--green);height:20px}
+
+
+/* Compute-bud */
+.bud{display:flex;align-items:flex-start;gap:8px;padding:10px 14px;background:var(--panel);border-left:3px solid var(--ink);font-size:15px;font-weight:600;max-width:72ch}
+.bud svg{flex:none;margin-top:3px}
+.cmp-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.cmp-tile{background:var(--surface);border:1px solid var(--card-border);border-top:3px solid var(--green);padding:18px 20px}
+.cmp-tile .big{display:block;font-size:30px;font-weight:600;line-height:1.2;font-variant-numeric:tabular-nums}
+.cmp-tile .lbl{display:block;font-size:15px;margin-top:4px}
+.cmp-tile .rng{display:block;font-size:13px;color:var(--ink-2);margin-top:6px}
+.cmp-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:24px;margin-top:24px;align-items:start}
+.calc{background:var(--panel);border-top:3px solid var(--green);padding:20px}
+.calc h3,.how-wrap h3,.measure h3{font-size:19px;margin-bottom:8px}
+.calc-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px;margin-top:12px}
+.calc label{display:grid;gap:4px;font-size:14px;font-weight:700}
+.calc select,.calc input{font:inherit;font-size:15px;font-weight:400;padding:7px 10px;border:1px solid var(--hairline);background:var(--surface);color:var(--ink);border-radius:0;width:100%}
+.calc input[aria-invalid="true"]{border:2px solid var(--ink)}
+.calc-err{margin-top:10px;font-size:13px;font-weight:700;display:flex;gap:6px;align-items:center}
+.calc-out{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}
+.calc-out > div{background:var(--surface);padding:10px 12px;min-width:0}
+.calc-out .l{display:block;font-size:12px;font-weight:600;color:var(--ink-2)}
+.calc-out .v{display:block;font-size:21px;font-weight:700;font-variant-numeric:tabular-nums}
+.calc-out .s{display:block;font-size:12px;color:var(--ink-2)}
+.how{width:100%;border-collapse:collapse;font-size:14px;line-height:1.5}
+.how th,.how td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--card-border);vertical-align:top}
+.how th{font-size:12px;color:var(--ink-2);font-weight:700}
+.how td:first-child{font-weight:700;white-space:nowrap}
+.how td.n{white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:700}
+.how tr.res td{background:var(--panel)}
+.how-wrap{min-width:0}
+.how-wrap .pitfalls{margin-top:6px}
+.measure{margin-top:24px;background:var(--surface);border:1px solid var(--card-border);border-top:3px solid var(--green);padding:20px 22px}
+.measure ol{margin:10px 0 0;padding-left:22px;display:grid;gap:8px;max-width:80ch}
+.measure p{max-width:80ch}
+
+@media (min-width: 981px){
+  .map-card{position:sticky;top:72px}
+}
+@media (max-width: 980px){
+  .roadmap{grid-template-columns:1fr}
+  .stages{position:static}
+  .stage-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stage-list::before{display:none}
+  .explorer{grid-template-columns:1fr}
+  .why-grid,.tldr{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .loop{grid-template-columns:repeat(2,minmax(0,1fr))}
+  footer.site .wrap{grid-template-columns:1fr}
+  .cmp-grid{grid-template-columns:minmax(0,1fr)}
+  .maps2,.nums{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width: 640px){
+  .wrap{padding:0 16px}
+  h1{font-size:34px}
+  h2{font-size:26px}
+  .stage-list{grid-template-columns:1fr}
+  .io{grid-template-columns:1fr}
+  .detail{padding:20px 16px}
+  .why-grid,.steps,.tldr{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cav-row{grid-template-columns:1fr}
+  .params{grid-template-columns:1fr}
+  .params dd{margin-bottom:6px}
+  .sim-row{grid-template-columns:minmax(0,1fr) 70px 36px}
+  .topnav nav{display:none}
+  .ex-ctl .viewctl{flex-wrap:wrap}
+  .seg{flex-wrap:wrap;max-width:100%}
+  .cmp-tiles,.calc-fields{grid-template-columns:1fr}
+  .inst-ctl{flex-wrap:wrap;width:100%}
+  .inst-ctl .sel{width:100%}
+  .map-type dl{grid-template-columns:1fr;gap:2px}
+  .map-type dd{margin-bottom:8px}
+  .how td:first-child,.how td.n{white-space:normal}
+  .how th,.how td{padding:8px 6px}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition:none !important;animation:none !important}
+}
+</style>
+</head>
+<body data-view="overblik">
+
+<header class="masthead">
+  <div class="wrap">
+    <p class="eyebrow">Forslag: et anonymt overblik over, hvordan StatGPT bruges</p>
+    <h1>Fra samtaler til overblik</h1>
+    <p class="lede">Jeg foreslår, at vi bygger et Clio/Kura-kort: et anonymt, datadrevet overblik over, hvad medarbejderne på de 130 institutioner bruger StatGPT til, hvor den fejler, og hvor der er risici. Vi får ét fælles kort for alle 130 institutioner og et kort til hver institution, som vi kan dele med ledelsen dér. På denne side kan du se, hvordan det virker, hvad vi får ud af det, og hvad vi skal være opmærksomme på.</p>
+    <div class="tldr" aria-label="Kort fortalt">
+      <div><b>Hvad</b><p>Ét fælles kort over, hvad StatGPT bruges til på de 130 institutioner, og et kort til hver institutions ledelse. Begge bygges automatisk ud fra samtalerne.</p></div>
+      <div><b>Hvordan</b><p>En sprogmodel skriver et anonymt resumé af hver samtale, og algoritmer samler resuméerne i temaer. Ingen læser samtalerne.</p></div>
+      <div><b>Hvorfor</b><p>Vi kan se, hvor StatGPT hjælper, og hvor den fejler, prioritere kurser og forbedringer og opdage risici tidligt.</p></div>
+      <div><b>Compute</b><p>Bud: ca. 1,8 GPU-timer og ca. 2 kWh strøm pr. 10.000 samtaler på vores H100-kort med Gemma 4 31B. Det skal måles i en test. <a href="#compute">Se hvordan buddet er regnet</a></p></div>
+    </div>
+    <p class="fiction"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>Alle samtaler, klynger og tal i eksemplerne er fiktive</p>
+  </div>
+</header>
+
+<div class="topnav">
+  <div class="wrap">
+    <nav aria-label="Sektioner">
+      <a href="#demo">Klyngekortet</a>
+      <a href="#pipeline">Pipelinen</a>
+      <a href="#hvorfor">Hvorfor det er smart</a>
+      <a href="#compute">Compute</a>
+      <a href="#forbehold">Forbehold</a>
+      <a href="#naeste">Næste skridt</a>
+      <a href="#kilder">Kilder</a>
+    </nav>
+    <div class="viewctl">
+      <span class="seg-label" id="view-label">Visning</span>
+      <div class="seg" role="group" aria-labelledby="view-label">
+        <button type="button" id="view-overblik" data-view="overblik" aria-pressed="true">Overblik</button>
+        <button type="button" id="view-teknisk" data-view="teknisk" aria-pressed="false">Teknisk</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="part" id="demo" aria-labelledby="demo-h">
+    <div class="wrap">
+      <div class="part-head">
+        <h2 id="demo-h">Klyngekortet: ét fælles kort og 130 institutionskort</h2>
+        <p>Sådan kunne vores kort se ud. Tallene er fiktive: 100.000 samtaler fra 130 institutioner i oktober 2026, samlet i fem temaer. Under »Kort for« kan du skifte mellem fælleskortet for alle 130 institutioner og den enkelte institutions eget kort, fx Institution 047, som eksemplet i pipelinen kommer fra. Klik på en boble eller i listen for at zoome ind, og brug »Tilbage« for at zoome ud. Demoen viser de tre øverste niveauer; under dem ligger flere niveauer ned til basisklynger på ca. 10 samtaler.</p>
+      </div>
+      <div class="ex-ctl">
+        <div class="viewctl inst-ctl">
+          <label class="seg-label" for="inst-sel">Kort for</label>
+          <select id="inst-sel" class="sel"></select>
+        </div>
+        <div class="viewctl">
+          <span class="seg-label" id="color-label">Farv efter</span>
+          <div class="seg" role="group" aria-labelledby="color-label" id="color-seg">
+            <button type="button" id="color-none" data-facet="none" aria-pressed="true">Ingen</button>
+            <button type="button" id="color-err" data-facet="err" aria-pressed="false">Assistentfejl</button>
+            <button type="button" id="color-pii" data-facet="pii" aria-pressed="false">Personoplysninger</button>
+            <button type="button" id="color-frust" data-facet="frust" aria-pressed="false">Frustration</button>
+          </div>
+        </div>
+      </div>
+      <div class="explorer">
+        <div class="map-card" id="map-card">
+          <div class="map-bar">
+            <button type="button" class="btn back" id="map-back" hidden>Tilbage</button>
+            <span class="map-where" id="map-where">Fem temaer · klik på en boble for at zoome ind</span>
+          </div>
+          <svg class="map-svg" id="map" viewBox="0 0 800 520" role="group" aria-label="Klyngekort"></svg>
+          <div class="map-foot">
+            <span id="map-foot-txt">Boblestørrelse = antal samtaler · hver prik ≈ 100 samtaler</span>
+            <span id="ramp-legend" class="ramp" hidden></span>
+          </div>
+          <div class="tooltip" id="tooltip" role="status" aria-live="off"></div>
+        </div>
+        <aside class="cl-panel" id="cl-panel" aria-live="polite"></aside>
+      </div>
+      <p class="note">Privatlivsregel i demoen: klynger med under 25 samtaler vises ikke, og på et institutionskort tæller kun institutionens egne samtaler. Der er ingen grænse for, hvor få institutioner en klynge må komme fra. Institutionstal og facetter er beregnet ud fra metadata og resuméernes felter.</p>
+
+      <div class="nums-head" id="tal">
+        <h3>Sådan er bekymringsscore og personoplysninger regnet</h3>
+        <p>Begge tal kommer fra de felter, sprogmodellen udfylder for hver samtale, når den skriver resuméet i trin 2. Ingen medarbejder læser samtalerne. Bagefter tæller vi op pr. klynge. På et institutionskort tæller kun institutionens egne samtaler med.</p>
+      </div>
+      <div class="nums">
+        <article class="num-card">
+          <h4>Bekymringsscore ≥ 3</h4>
+          <p class="num-lead">Andelen af samtaler, som sprogmodellen vurderer bør ses nærmere.</p>
+          <b class="num-lbl">Hver samtale</b>
+          <p>Sprogmodellen giver samtalen en score fra 1 til 5. Den får en fast beskrivelse af, hvad hvert trin betyder. Kuras standardbeskrivelse er:</p>
+          <ul class="scale" aria-label="Kuras skala for bekymringsscore">
+            <li><b>1</b><span>Slet ikke bekymrende, en helt harmløs samtale</span></li>
+            <li><b>2</b><span>Lidt bekymrende, men sandsynligvis harmløs</span></li>
+            <li class="on"><b>3</b><span>Moderat bekymrende, bør ses nærmere</span><em>tæller med</em></li>
+            <li class="on"><b>4</b><span>Meget bekymrende, bør gennemgås</span><em>tæller med</em></li>
+            <li class="on"><b>5</b><span>Ekstremt bekymrende, skal gennemgås med det samme</span><em>tæller med</em></li>
+          </ul>
+          <b class="num-lbl">På kortet</b>
+          <p>Vi tæller de samtaler i klyngen, der har fået 3 eller mere, og deler med alle samtaler i klyngen.</p>
+          <p class="num-ex"><b>Eksempel</b>»Bevilling?« har 3.000 samtaler på fælleskortet. 540 af dem har fået 3 eller mere: 540 ÷ 3.000 = 18&nbsp;%.</p>
+          <b class="num-lbl">Vær opmærksom på</b>
+          <p>Scoren er sprogmodellens vurdering, ikke en fast regel. Kuras skala er skrevet til sikkerhedsovervågning og handler om skadeligt indhold. Vi skriver vores egen beskrivelse af de fem trin, fx så 3 eller mere betyder, at StatGPT bliver bedt om at vurdere eller afgøre en konkret sag om en borger. Demoen er tænkt med sådan en tilpasset skala.</p>
+          <p>Før vi bruger tallet, sammenligner vi modellens scorer med samtaler, som medarbejdere har vurderet. Kortet viser »Bør undersøges«, når mindst 10&nbsp;% har fået 3 eller mere. Den grænse fastsætter vi selv.</p>
+          <p class="num-tech tech-only">Teknisk: Kuras felt concerning_score (heltal 1–5). For et tema regnes andelen på alle samtaler i temaet, ikke som et gennemsnit af underklyngernes procenter.</p>
+        </article>
+        <article class="num-card">
+          <h4>Personoplysninger i prompten</h4>
+          <p class="num-lead">Andelen af samtaler, hvor brugeren har skrevet eller indsat oplysninger om en bestemt person.</p>
+          <b class="num-lbl">Hver samtale</b>
+          <p>Feltet findes ikke i Kura fra start. Vi tilføjer det til skabelonen, så sprogmodellen for hver samtale svarer ja eller nej til spørgsmålet: Har brugeren skrevet eller indsat oplysninger om en bestemt person, fx navn, CPR-nummer, adresse, sagsnummer eller helbredsoplysninger?</p>
+          <p>Modellen noterer kun ja eller nej. Selve oplysningerne kommer ikke med i resuméet.</p>
+          <b class="num-lbl">På kortet</b>
+          <p>Vi tæller de samtaler i klyngen, der er markeret med ja, og deler med alle samtaler i klyngen.</p>
+          <p class="num-ex"><b>Eksempel</b>»Resuméer« har 4.700 samtaler på fælleskortet. 3.008 af dem er markeret med ja: 3.008 ÷ 4.700 = 64&nbsp;%.</p>
+          <b class="num-lbl">Vær opmærksom på</b>
+          <p>Også dette er sprogmodellens vurdering. Den kan overse en oplysning eller markere for meget. Vi måler, hvor præcis den er, på testsamtaler, hvor vi kender svaret, og kan supplere med en simpel automatisk søgning efter fx CPR-numre.</p>
+          <p>Tallet viser, hvor medarbejderne indsætter personoplysninger, så vi kan målrette retningslinjer og kurser. Kortet viser »Bør undersøges«, når mindst 40&nbsp;% er markeret med ja. Også den grænse fastsætter vi selv.</p>
+          <p class="num-tech tech-only">Teknisk: eget felt personoplysninger_i_prompt (sand/falsk), tilføjet via response_schema i trin 2.</p>
+        </article>
+      </div>
+      <p class="note">Frustration (gennemsnit på en skala fra 1 til 5) og assistentfejl (andelen af samtaler med mindst én fejl) er regnet på samme måde ud fra resuméets felter.</p>
+
+      <div class="maps2-head">
+        <h3>To slags kort fra samme kørsel</h3>
+        <p>Pipelinen kører én gang på alle samtaler. Ud af den kommer både fælleskortet og et kort til hver af de 130 institutioner.</p>
+      </div>
+      <div class="maps2">
+        <article class="map-type">
+          <h4>Fælleskortet</h4>
+          <dl>
+            <dt>Til</dt><dd>Os, der har ansvaret for StatGPT på tværs af de 130 institutioner.</dd>
+            <dt>Viser</dt><dd>Alle samtaler fra alle 130 institutioner, og hvilke institutioner der bruger hvert emne mest.</dd>
+            <dt>Privatliv</dt><dd>Klynger med under 25 samtaler vises ikke. Tal på institutionsniveau må gerne vises, så en klynge må godt komme fra én institution.</dd>
+          </dl>
+        </article>
+        <article class="map-type">
+          <h4>130 institutionskort</h4>
+          <dl>
+            <dt>Til</dt><dd>Ledelsen på den enkelte institution.</dd>
+            <dt>Viser</dt><dd>Institutionens egne samtaler i det samme træ som fælleskortet, med tallene for alle 130 ved siden af.</dd>
+            <dt>Privatliv</dt><dd>Klynger med under 25 samtaler fra institutionen eller fra under 5 forskellige medarbejdere vises ikke, og der er ingen eksempler på resuméer. Så kan ledelsen ikke genkende den enkelte medarbejder eller sag. Demoen bruger kun grænsen på 25 samtaler, fordi de fiktive data ikke har medarbejdere.</dd>
+          </dl>
+        </article>
+      </div>
+      <ul class="facts">
+        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span><b>Ét træ til alle kort.</b> Hvert institutionskort er det samme træ, talt op for institutionen ud fra metadata. Derfor har alle 130 kort de samme kategorier, og tallene kan sammenlignes og lægges sammen. Kortene koster ingen ekstra GPU-tid.</span></li>
+        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span><b>Alle samtaler, ikke en stikprøve.</b> Hvor detaljeret et institutionskort bliver, afhænger af, hvor mange samtaler institutionen har. I demoen skal en institution have ca. 200 samtaler for at se alle fem temaer og ca. 1.250 for at se alle tre niveauer. Små institutioner kan få et kvartalskort i stedet for et månedskort.</span></li>
+        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span><b>Delt som filer.</b> Et lille script laver én selvstændig side pr. institution, ligesom denne, med institutionens egne tal og tallene for alle 130. Siden sendes til institutionens ledelse. Kuras egen webapp har intet login og skal ikke bruges til at dele kortene.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="part band" id="pipeline" aria-labelledby="pipeline-h">
+    <div class="wrap">
+      <div class="part-head">
+        <h2 id="pipeline-h">Pipelinen trin for trin</h2>
+        <p>Pipelinen er de otte trin, der gør samtaler til et kort. Klik på et trin for at se, hvad der sker, og hvorfor det er smart. Et fiktivt eksempel følger én samtale, hvor en sagsbehandler får hjælp til et afslag, hele vejen igennem.</p>
+      </div>
+      <div class="roadmap">
+        <div class="stages">
+          <div class="legend-row" aria-label="Forklaring">
+            <span><span class="tag" data-type="llm">LLM</span>sprogmodel</span>
+            <span><span class="tag" data-type="ml">ML</span>klassisk maskinlæring</span>
+            <span><span class="tag" data-type="data">Data</span>data og visning</span>
+          </div>
+          <ol class="stage-list" id="stage-list"></ol>
+        </div>
+        <article class="detail" id="detail" aria-live="polite"></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="part" id="hvorfor" aria-labelledby="hvorfor-h">
+    <div class="wrap">
+      <div class="part-head">
+        <h2 id="hvorfor-h">Hvorfor det er smart for os</h2>
+        <p>Seks grunde til at bygge et Clio/Kura-kort over brugen af StatGPT.</p>
+      </div>
+      <div class="why-grid">
+        <article class="why">
+          <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div>
+          <h3>Overblik uden at læse samtaler</h3>
+          <p>Ingen medarbejder skal læse rå samtaler. Sprogmodellen laver anonyme resuméer, og vi ser kun samlede mønstre på tværs af mange samtaler. Anthropic bruger samme princip til millioner af Claude-samtaler.<sup><a href="#kilde-1">1</a></sup><sup><a href="#kilde-3">3</a></sup></p>
+        </article>
+        <article class="why">
+          <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div>
+          <h3>Kategorierne kommer fra data</h3>
+          <p>Vi skal ikke gætte kategorierne på forhånd, som i et spørgeskema. Metoden finder også det, vi ikke vidste, vi skulle lede efter, fx at svar om nye regler oftere er forkerte.</p>
+        </article>
+        <article class="why">
+          <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"/></svg></div>
+          <h3>Beslutningsgrundlag for 130 institutioner</h3>
+          <p>Fælleskortet viser, hvad StatGPT faktisk bruges til, og hvilke institutioner der bruger hvert emne. Hver institution får desuden sit eget kort med tallene for alle 130 til sammenligning. Det kan styre kurser, skabeloner, integrationer og prioriteringer, både centralt og lokalt.</p>
+        </article>
+        <article class="why">
+          <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 4.5 3.4 8 8 9 4.6-1 8-4.5 8-9V6l-8-3z"/><path d="M12 8v4M12 16h.01"/></svg></div>
+          <h3>Tidlig advarsel om risici</h3>
+          <p>Facetter som »personoplysninger i prompten« og »vurderinger tæt på afgørelser« viser, hvor vi bør lave retningslinjer, før det bliver en sag.</p>
+        </article>
+        <article class="why">
+          <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9.5 2h5"/></svg></div>
+          <h3>Billigt og hurtigt</h3>
+          <p>På vores egne H100-kort med Gemma 4 31B er buddet ca. 1,8 GPU-timer pr. 10.000 samtaler (<a href="#compute">se buddet</a>). Med hostede modeller i skyen angiver Clio-papiret ca. 49 USD pr. 100.000 samtaler.<sup><a href="#kilde-2">2</a></sup></p>
+        </article>
+        <article class="why">
+          <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div>
+          <h3>Afprøvet metode, åben kode</h3>
+          <p>Clio genfandt kendte kategorier med 94 % nøjagtighed i en test på syntetiske samtaler.<sup><a href="#kilde-1">1</a></sup> Forskere fra Stanford og Oxford brugte i 2026 Anthropics værktøj uden at se rå samtaler.<sup><a href="#kilde-4">4</a></sup> Kura og OpenClio er open source og kan køre på egne servere.<sup><a href="#kilde-5">5</a></sup><sup><a href="#kilde-7">7</a></sup></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="part" id="compute" aria-labelledby="compute-h">
+    <div class="wrap">
+      <div class="part-head">
+        <h2 id="compute-h">Hvad koster det i compute?</h2>
+        <p>Et bud for vores egen hardware: H100-kort og Gemma 4 31B. Prisen fra Clio-papiret gælder hostede modeller i skyen og kan ikke bruges direkte, når vi kører på egne servere. Derfor har jeg regnet buddet ud fra Kuras egne prompter og offentlige målinger af modellen.</p>
+        <p class="bud"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><span>Dette er et bud, ikke en måling. Det er ikke målt på vores pipeline endnu, og tallene kan være op til ca. halvt eller dobbelt så store. Næste skridt nederst handler om at måle det.</span></p>
+      </div>
+      <div class="cmp-tiles">
+        <div class="cmp-tile"><span class="big">ca. 1,8 GPU-timer</span><span class="lbl">pr. 10.000 samtaler</span><span class="rng">Interval 1,2–3,0 GPU-timer</span></div>
+        <div class="cmp-tile"><span class="big">ca. 1,8 kWh</span><span class="lbl">strøm pr. 10.000 samtaler</span><span class="rng">Antaget ca. 1 kW pr. kort inkl. serverens andel</span></div>
+        <div class="cmp-tile"><span class="big">ca. 23 timer</span><span class="lbl">for 1 mio. samtaler på 8 kort</span><span class="rng">184 GPU-timer i alt (interval 121–304)</span></div>
+      </div>
+      <div class="cmp-grid">
+        <div class="calc">
+          <h3>Regn selv</h3>
+          <p class="note">Samme beregning som buddet. Kun sprogmodelkaldene er regnet med; embeddings, k-means og UMAP tager minutter på CPU.</p>
+          <div class="calc-fields">
+            <label for="calc-n">Antal samtaler
+              <select id="calc-n">
+                <option value="10000" selected>10.000</option><option value="25000">25.000</option><option value="50000">50.000</option><option value="100000">100.000</option><option value="250000">250.000</option><option value="500000">500.000</option><option value="1000000">1.000.000</option>
+              </select></label>
+            <label for="calc-c">Gns. samtalelængde
+              <select id="calc-c">
+                <option value="1500" selected>1.500 tokens (antagelse)</option><option value="3000">3.000 tokens</option><option value="5000">5.000 tokens</option><option value="10000">10.000 tokens</option>
+              </select></label>
+            <label for="calc-g">Antal H100-kort
+              <select id="calc-g">
+                <option value="1" selected>1</option><option value="2">2</option><option value="4">4</option><option value="8">8</option>
+              </select></label>
+            <label for="calc-p">Elpris, kr. pr. kWh
+              <input id="calc-p" type="text" inputmode="decimal" value="2,00" aria-describedby="calc-p-note"></label>
+          </div>
+          <p class="calc-err" id="calc-err" role="alert" hidden></p>
+          <div class="calc-out" aria-live="polite">
+            <div><span class="l">GPU-tid</span><span class="v" id="calc-gpu">–</span><span class="s" id="calc-gpu-r"></span></div>
+            <div><span class="l">Tid på jeres kort</span><span class="v" id="calc-wall">–</span><span class="s" id="calc-wall-r"></span></div>
+            <div><span class="l">Strøm</span><span class="v" id="calc-kwh">–</span><span class="s" id="calc-kwh-r"></span></div>
+            <div><span class="l">Strømpris</span><span class="v" id="calc-kr">–</span><span class="s" id="calc-kr-r"></span></div>
+          </div>
+          <p class="note" id="calc-p-note">Elprisen er en antagelse; skriv jeres egen. Står kortene ellers ledige om natten, er strømmen stort set den eneste ekstra udgift.</p>
+        </div>
+        <div class="how-wrap">
+          <h3>Sådan er buddet regnet</h3>
+          <p class="note">Eksempel: 10.000 samtaler på i snit 1.500 tokens, Gemma 4 31B i BF16 med vLLM på ét H100-kort.</p>
+          <table class="how">
+            <tr><th>Del</th><th>Tal</th><th>Hvor det kommer fra</th></tr>
+            <tr><td>Tokens ind</td><td class="n">27,4 mio.</td><td>Kuras egne prompter, talt i kildekoden: opsummering ca. 770 tokens, selve samtalen (antaget 1.500 tokens) og navngivning og hierarki ca. 470 tokens pr. samtale.</td></tr>
+            <tr><td>Tokens ud</td><td class="n">2,35 mio.</td><td>Ca. 220 tokens pr. resumé plus korte klyngenavne.</td></tr>
+            <tr><td>Læsehastighed</td><td class="n">8.000 tokens/s<br><span class="note">5.000–12.000</span></td><td>Beregnet: ca. 61 mia. regneoperationer pr. token for en model med 30,7 mia. parametre,<sup><a href="#kilde-14">14</a></sup> mod H100's ca. 990 billioner pr. sekund i BF16<sup><a href="#kilde-15">15</a></sup> ved ca. halv udnyttelse.</td></tr>
+            <tr><td>Generering</td><td class="n">1.000 tokens/s<br><span class="note">800–1.260</span></td><td>Målt: 855–1.260 tokens/s for Gemma 4 31B på ét H100-kort med vLLM ved batchkørsel.<sup><a href="#kilde-11">11</a></sup><sup><a href="#kilde-12">12</a></sup></td></tr>
+            <tr><td>Tillæg</td><td class="n">+15 %<br><span class="note">5–30 %</span></td><td>Antagelse: genkald ved ugyldig JSON, opstart og ventetid mellem trin.</td></tr>
+            <tr class="res"><td>GPU-tid</td><td class="n">ca. 1,8 timer<br><span class="note">1,2–3,0</span></td><td>27,4 mio. ÷ 8.000 + 2,35 mio. ÷ 1.000 ≈ 5.800 sekunder ≈ 1,6 timer, plus 15 %.</td></tr>
+            <tr class="res"><td>Strøm</td><td class="n">ca. 1,8 kWh</td><td>Et H100-kort trækker op til 700 W;<sup><a href="#kilde-15">15</a></sup> med serverens andel regner vi med ca. 1 kW pr. kort.</td></tr>
+          </table>
+          <h3 style="margin-top:22px">Det kan flytte buddet</h3>
+          <ul class="pitfalls">
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><span><b>Samtalernes længde.</b> Kura afkorter ikke lange samtaler, så indsatte sagsakter øger regnetiden næsten lineært: 5.000 tokens i snit giver ca. 1,8 gange så meget, 10.000 tokens ca. 2,8 gange.</span></li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><span><b>Thinking-tilstanden.</b> Gemma 4 har en indstillelig »thinking«-tilstand.<sup><a href="#kilde-16">16</a></sup> Den skal være slået fra til opsummering; ellers kan antallet af genererede tokens blive mange gange større.</span></li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><span><b>Hurtigere opsætning.</b> FP8-vægte og spekulativ afkodning (MTP) kan sænke buddet. MTP gjorde genereringen 3,1 gange hurtigere ved én samtidig forespørgsel.<sup><a href="#kilde-13">13</a></sup> Det er ikke regnet med, fordi der endnu ikke findes uafhængige målinger af FP8 ved batchkørsel.<sup><a href="#kilde-12">12</a></sup></span></li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><span><b>Korttypen.</b> Buddet gælder H100 SXM. PCIe-udgaven har lavere regnekraft og hukommelsesbåndbredde og vil tage længere tid.</span></li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><span><b>Alle samtaler.</b> Institutionskortene kræver alle samtaler, ikke en stikprøve, og GPU-tiden vokser lineært med antallet. En måned som i demoen, 100.000 samtaler, giver ca. 18 GPU-timer (12–30) eller godt 2 timer på 8 kort. Selve de 130 institutionskort koster ikke ekstra; de er optællinger på samme kørsel.</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="measure">
+        <h3>Næste skridt: mål det med vores egen pipeline</h3>
+        <p>Buddet skal erstattes af en måling. En test på 1.000 samtaler er nok til at få et tal, vi kan gange op.</p>
+        <ol>
+          <li>Kør Kura med Gemma 4 31B bag vLLM på ét H100-kort på 1.000 syntetiske eller anonymiserede testsamtaler, med de prompter og indstillinger, vi vil bruge i drift.</li>
+          <li>Mål tokens ind og ud pr. trin med vLLM's indbyggede målinger, den samlede tid pr. trin, GPU-udnyttelse og strømforbrug med nvidia-smi, og hvor ofte modellen skal spørges igen på grund af ugyldig JSON.</li>
+          <li>Mål den faktiske gennemsnitlige samtalelængde i vores logs. Det er det tal, der flytter buddet mest.</li>
+          <li>Prøv to–tre indstillinger: BF16 mod FP8, 64 mod 256 samtidige kald og afkortning af meget lange samtaler.</li>
+          <li>Resultat: en målt pris pr. 1.000 samtaler, der erstatter buddet på denne side.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="part band" id="forbehold" aria-labelledby="forbehold-h">
+    <div class="wrap">
+      <div class="part-head">
+        <h2 id="forbehold-h">Det skal vi tage alvorligt</h2>
+        <p>Seks forbehold, og hvad vi gør ved dem.</p>
+      </div>
+      <div class="cav" id="cav"></div>
+    </div>
+  </section>
+
+  <section class="part" id="naeste" aria-labelledby="naeste-h">
+    <div class="wrap">
+      <div class="part-head">
+        <h2 id="naeste-h">Forslag til næste skridt</h2>
+        <p>En forsigtig vej fra idé til månedlige kort, i samme rækkefølge som Anthropics egen pilot: først test på data uden personoplysninger, så rigtige data.<sup><a href="#kilde-4">4</a></sup></p>
+      </div>
+      <ol class="steps">
+                <li><h3>Teknisk test og måling</h3><p>Kør pipelinen med Gemma 4 31B på ét H100-kort på syntetiske samtaler. Mål tokens, tid og strøm, og tilpas prompterne til dansk.</p></li>
+        <li><h3>Tilføj beskyttelseslagene</h3><p>Byg Clios tre ekstra lag ind i Kura: minimumsstørrelse for klynger, privatlivsbevidst navngivning og automatisk audit. Mindstegrænsen skal også gælde på hvert institutionskort.</p></li>
+        <li><h3>Pilot</h3><p>Kør på en måneds samtaler, og lav fælleskortet og institutionskort for nogle få pilotinstitutioner. Gennemgå kortene med deres ledelser.</p></li>
+        <li><h3>Evaluér og beslut</h3><p>Vurdér kvalitet og nytte. Derefter evt. et månedligt fælleskort og 130 institutionskort.</p></li>
+      </ol>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site" id="kilder" aria-labelledby="kilder-h">
+  <div class="wrap">
+    <div>
+      <h2 id="kilder-h">Kilder</h2>
+      <ol class="sources">
+        <li id="kilde-1"><a href="https://arxiv.org/abs/2412.13678">Clio: Privacy-Preserving Insights into Real-World AI Use</a> <span>Tamkin m.fl., Anthropic, 2024</span></li>
+        <li id="kilde-2"><a href="https://www.platformer.news/how-claude-uses-ai-to-identify-new-threats/">How Claude uses AI to identify new threats</a> <span>Platformer, 2024 (pris: 48,81 USD pr. 100.000 samtaler)</span></li>
+        <li id="kilde-3"><a href="https://arxiv.org/abs/2503.04761">Which Economic Tasks are Performed with AI? Evidence from Millions of Claude Conversations</a> <span>Handa m.fl., Anthropic, 2025</span></li>
+        <li id="kilde-4"><a href="https://www.anthropic.com/research/enabling-independent-research">Enabling independent research on how people use Claude</a> <span>Anthropic, august 2026</span></li>
+        <li id="kilde-5"><a href="https://github.com/jxnl/kura">Kura på GitHub</a> <span>open source, detaljerne på denne side er tjekket mod kildekoden</span></li>
+        <li id="kilde-6"><a href="https://usekura.xyz/blog/">Kura-bloggen: Benchmarking Kura</a> <span>567 Labs</span></li>
+        <li id="kilde-7"><a href="https://github.com/Phylliida/OpenClio">OpenClio på GitHub</a> <span>open source, kører med lokale modeller via vLLM</span></li>
+        <li id="kilde-8"><a href="https://arxiv.org/abs/2603.09781">Cliopatra: Extracting Private Information from LLM Insights</a> <span>Annamalai, De Cristofaro &amp; Kairouz, 2026</span></li>
+        <li id="kilde-9"><a href="https://arxiv.org/abs/2505.14549">Can Large Language Models Really Recognize Your Name?</a> <span>2025</span></li>
+        <li id="kilde-10"><a href="https://arxiv.org/abs/2506.04681">Urania: Differentially Private Insights into AI Use</a> <span>Liu m.fl., Google Research, COLM 2025</span></li>
+        <li id="kilde-11"><a href="https://inferencebench.io/blog/gemma-4-31b-h100-complete-inference-benchmark/">Gemma 4 31B on H100: The Complete Inference Benchmark</a> <span>InferenceBench, 2026</span></li>
+        <li id="kilde-12"><a href="https://markaicode.com/benchmarks/cuda-gemma-4-h100-latency-benchmark/">Gemma 4 31B on H100: vLLM Latency &amp; Throughput Benchmarks</a> <span>Markaicode, juli 2026</span></li>
+        <li id="kilde-13"><a href="https://jarvislabs.ai/blog/gemma-4-mtp-vs-dflash-benchmark">Benchmarking Gemma 4 MTP vs DFlash on a Single H100</a> <span>Jarvislabs, 2026</span></li>
+        <li id="kilde-14"><a href="https://featherless.ai/models/google/gemma-4-31B">Gemma 4 31B</a> <span>modelside: tæt model med 30,7 mia. parametre</span></li>
+        <li id="kilde-15"><a href="https://www.nvidia.com/en-us/data-center/h100/">NVIDIA H100 Tensor Core GPU</a> <span>NVIDIA, specifikationer</span></li>
+        <li id="kilde-16"><a href="https://aicybr-sveltekit.pages.dev/blog/gemma-4-ultimate-guide">Gemma 4: The Ultimate Guide</a> <span>AICybr, april 2026 (thinking-tilstande)</span></li>
+      </ol>
+    </div>
+    <div class="about">
+      <h2>Om siden</h2>
+      <p>Alle samtaler, klynger, institutioner og tal i eksemplerne og demoen er opdigtede til illustration.</p>
+      <p>Kura-detaljerne (standardmodeller, parametre og faldgruber) er tjekket mod kildekoden i jxnl/kura, november 2026.</p>
+    </div>
+  </div>
+  <div class="greenbar" aria-hidden="true"></div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- helpers ---------- */
+const nf = new Intl.NumberFormat("da-DK");
+const nf1 = new Intl.NumberFormat("da-DK",{minimumFractionDigits:1,maximumFractionDigits:1});
+const fmt = n => nf.format(Math.round(n));
+const pct = v => nf.format(Math.round(v)) + " %";
+const $ = (s, r=document) => r.querySelector(s);
+const ICON_OK = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+const ICON_WARN = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>';
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+function store(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+function load(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+const reduceMotion = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+function isDark(){const t=document.documentElement.getAttribute("data-theme");if(t)return t==="dark";return !!(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches);}
+
+/* ---------- running example ---------- */
+const RAW = `<div class="chat">
+  <div class="msg"><span class="who">Bruger</span>Hej. Kan du omskrive dette afslag, så det bliver lettere at forstå? Det skal til <mark class="pii">Jens Mikkelsen, Bøgevej 12, Vejle</mark> (sagsnr. <mark class="pii">2026-04417</mark>). Han har søgt om hjælp til tandbehandling, men hans formue er over grænsen. Udkast: »Under henvisning til Deres ansøgning af 3. marts 2026 meddeles det hermed, at ansøgningen ikke kan imødekommes …«</div>
+  <div class="msg bot"><span class="who">Assistent</span>Her er et forslag: »Kære <mark class="pii">Jens</mark>. Vi har behandlet din ansøgning om hjælp til tandbehandling. Du kan desværre ikke få hjælp, fordi din formue er større end grænsen …«</div>
+  <div class="msg"><span class="who">Bruger</span>Fint, men du har fjernet klagevejledningen. Den skal med. Og gør det lidt kortere.</div>
+  <div class="msg bot"><span class="who">Assistent</span>Selvfølgelig. Her er en kortere version med klagevejledningen …</div>
+</div>
+<span class="keyline"><i></i>Understreget = personoplysninger</span>`;
+
+const CONV_JSON = `<pre class="code">{
+  <span class="k">"chat_id"</span>: "c-7f3a91",
+  <span class="k">"created_at"</span>: "2026-10-14T09:12:00",
+  <span class="k">"messages"</span>: [
+    { "role": "user",
+      "content": "Hej. Kan du omskrive dette afslag …",
+      "created_at": "2026-10-14T09:12:00" },
+    { "role": "assistant",
+      "content": "Her er et forslag: …", … },
+    <span class="c">… 2 beskeder mere</span>
+  ],
+  <span class="k">"metadata"</span>: {
+    "institution": "inst-047",
+    "maaned": "2026-10"
+  }
+}</pre>`;
+
+const SUMMARY_JSON = `<pre class="code">{
+  <span class="k">"summary"</span>: "Brugeren fik et afslag på økonomisk hjælp omskrevet til klart sprog og bad derefter om at få klagevejledningen med og teksten forkortet.",
+  <span class="k">"request"</span>: "Brugerens overordnede ønske er at omskrive et afgørelsesbrev, så en borger kan forstå det.",
+  <span class="k">"task"</span>: "Opgaven er at omskrive et afslag i klart sprog og bevare klagevejledningen.",
+  <span class="k">"languages"</span>: ["dansk"],
+  <span class="k">"concerning_score"</span>: 1,
+  <span class="k">"user_frustration"</span>: 2,
+  <span class="k">"assistant_errors"</span>: ["Fjernede klagevejledningen i første udkast"],
+  <span class="k">"personoplysninger_i_prompt"</span>: true  <span class="c">← eget felt</span>
+}</pre>
+<p class="sub">Navn, adresse og sagsnummer er væk. Det sidste felt er et eksempel på et felt, vi selv kan tilføje til skabelonen.</p>`;
+
+const SUMMARY_TEXT = `<pre class="code">"Brugeren fik et afslag på økonomisk hjælp omskrevet til klart sprog og bad derefter om at få klagevejledningen med og teksten forkortet."</pre>`;
+
+const VECTOR = `<pre class="code">[ 0.021, -0.113, 0.087, 0.004,
+ -0.052,  0.139, -0.018, 0.066,
+  <span class="c">… i alt 1.536 tal …</span>
+  0.034 ]</pre>
+<p class="sub">Selve tallene kan ingen læse. Det er afstanden mellem vektorerne, der bruges.</p>`;
+
+const VECTORS_IN = `<pre class="code">c-7f3a91 → [ 0.021, -0.113, … ]
+c-2b9e04 → [ 0.018, -0.097, … ]
+c-a51d77 → [-0.064,  0.122, … ]
+<span class="c">… 99.997 vektorer mere</span></pre>
+<p class="sub">100.000 vektorer, én pr. resumé.</p>`;
+
+const GROUP_OUT = `<div class="mini-h">Gruppe 417 · 11 samtaler</div>
+<ul class="plist">
+  <li class="me">Brugeren fik et afslag på økonomisk hjælp omskrevet til klart sprog og bad derefter om at få klagevejledningen med …<span class="meta">Vores eksempel</span></li>
+  <li>Brugeren bad om en venligere formulering af en afgørelse om ophør af ydelse.</li>
+  <li>Brugeren fik forenklet et afslag på enkeltydelse og bevaret lovhenvisningen.</li>
+  <li class="more">… 8 resuméer mere</li>
+</ul>
+<p class="sub">I alt ca. 10.000 grupper af denne slags.</p>`;
+
+const NAME_IN = `<div class="mini-h">Positive eksempler (gruppe 417)</div>
+<ul class="plist">
+  <li class="me">Brugeren fik et afslag på økonomisk hjælp omskrevet til klart sprog …</li>
+  <li>Brugeren bad om en venligere formulering af en afgørelse om ophør af ydelse.</li>
+  <li class="more">… 9 mere</li>
+</ul>
+<div class="mini-h">Kontrasteksempler (fra andre grupper)</div>
+<ul class="plist">
+  <li>Brugeren fik besvaret en borgers mail om ventetid på en sag.</li>
+  <li>Brugeren fik rettet en XOPSLAG-formel, der returnerede fejl.</li>
+  <li class="more">… 8 mere</li>
+</ul>`;
+
+const NAME_OUT = `<pre class="code">{
+  <span class="k">"name"</span>: "Omskriv afslag på økonomisk hjælp til klart sprog",
+  <span class="k">"summary"</span>: "Brugerne fik afslag på økonomisk hjælp omskrevet til et enklere sprog. Flere bad om, at klagevejledning og lovhenvisninger blev bevaret.",
+  <span class="k">"slug"</span>: "afslag_klart_sprog",
+  <span class="k">"chat_ids"</span>: ["c-7f3a91", "c-2b9e04", <span class="c">… 11 i alt</span>]
+}</pre>`;
+
+const TREE_OUT = `<ul class="tree">
+  <li style="--d:0"><span class="lvl">Top</span><span>Skriv og forbedr kommunikation til borgere og virksomheder</span><span class="cnt">28.600</span></li>
+  <li style="--d:1"><span class="lvl">Runde 6</span><span>Skriv og forbedr breve og afgørelser til borgere</span><span class="cnt">14.200</span></li>
+  <li style="--d:2"><span class="lvl">Runde 5</span><span>Omskriv afgørelsesbreve til borgere i klart sprog</span><span class="cnt">6.100</span></li>
+  <li style="--d:3"><span class="lvl">Runde 4</span><span>Omskriv afgørelser om ydelser og tilskud til klart sprog</span><span class="cnt">1.950</span></li>
+  <li style="--d:4"><span class="lvl">Runde 3</span><span>Omskriv afslag og andre afgørelser om ydelser</span><span class="cnt">610</span></li>
+  <li style="--d:5"><span class="lvl">Runde 2</span><span>Omskriv afslag og ophør af ydelser til klart sprog</span><span class="cnt">164</span></li>
+  <li style="--d:6"><span class="lvl">Runde 1</span><span>Omskriv afslag på økonomisk hjælp og enkeltydelser</span><span class="cnt">45</span></li>
+  <li style="--d:7" class="me"><span class="lvl">Basis</span><span>Omskriv afslag på økonomisk hjælp til klart sprog</span><span class="cnt">11</span></li>
+</ul>
+<p class="sub">Vores eksempel ligger nu otte niveauer nede i træet. De tre øverste niveauer er dem, du ser i demoen. Tallene er antal samtaler.</p>`;
+
+const PROJ_OUT = `<pre class="code">[
+  { <span class="k">"name"</span>: "Omskriv afgørelsesbreve til borgere i klart sprog",
+    <span class="k">"level"</span>: 2, <span class="k">"x_coord"</span>: 3.42, <span class="k">"y_coord"</span>: -1.17,
+    <span class="k">"chat_ids"</span>: [<span class="c">… 6.100 id'er</span>] },
+  { <span class="k">"name"</span>: "Formulér partshøringer og anmodninger om oplysninger",
+    <span class="k">"level"</span>: 2, <span class="k">"x_coord"</span>: 3.88, <span class="k">"y_coord"</span>: -0.64, … },
+  <span class="c">… 13.983 klynger mere</span>
+]</pre>`;
+
+/* ---------- stages ---------- */
+const STAGES = [
+{ n:1, type:"data", tagText:"Data", title:"Indlæs samtaler", sub:"Beskeder + metadata",
+  fn:"Conversation.from_conversation_dump()",
+  lede:"Først henter vi samtalerne fra platformens log og lægger dem i et fast format, som resten af pipelinen forstår. Til de 130 institutionskort tager vi alle samtaler fra perioden med. Hver samtale bliver anonymiseret og opsummeret i trin 2. Der er ingen kunstig intelligens i dette trin; det er ren datahåndtering.",
+  algoTitle:"Sådan foregår det",
+  algo:[
+    "Vælg perioden, fx én måned, og tag alle samtaler med. En tilfældig stikprøve er nok til de store mønstre på fælleskortet, men giver små institutioner for få samtaler til deres eget kort.",
+    "Erstat bruger-id'er med pseudonyme samtale-id'er, så resultatet ikke kan kobles direkte til en medarbejder. En pseudonym medarbejdernøgle, fx en saltet hash, gemmes i en separat tabel, så vi kan tælle forskellige medarbejdere pr. klynge.",
+    "Gem hver samtale som en liste af beskeder med rolle (bruger eller assistent), tekst og tidspunkt.",
+    "Vedhæft metadata som institution og måned. Metadata sendes ikke med til sprogmodellen i næste trin, men følger med, så vi senere kan tælle pr. institution."
+  ],
+  inTitle:"Rå samtale fra platformens log", inHtml:RAW,
+  outTitle:"Samme samtale i Kuras format", outHtml:CONV_JSON,
+  smart:[
+    "Ét fælles format betyder, at samme pipeline kan køre på data fra alle 130 institutioner.",
+    "Metadata følger med hele vejen, så vi kan se, hvilke institutioner der bruger hvad, uden at sprogmodellen ser, hvor samtalen kommer fra.",
+    "Med alle samtaler får hver institution sit eget datagrundlag, og vi fanger også de sjældne mønstre."
+  ],
+  say:"Første trin er ren datahåndtering: samtalerne hentes, bruger-id'er fjernes, og alt lægges i et fast format.",
+  params:[["Datatype","Conversation"],["Felter","chat_id, created_at, messages, metadata"],["Roller","kun user og assistant"],["Metadata","tekst, tal, sand/falsk eller lister heraf"],["Indlæsning","JSON-dump eller Hugging Face-datasæt"]],
+  code:`<span class="k">from</span> kura.types <span class="k">import</span> Conversation
+
+samtaler = Conversation.from_conversation_dump(
+    "samtaler_2026-10.json"
+)`,
+  pitfalls:[
+    "Kun rollerne user og assistant er tilladt. Systemprompter skal filtreres fra eller lægges i metadata.",
+    "Pseudonyme id'er fjerner ikke personoplysninger i selve teksten. Det håndteres i trin 2, og det bør måles.",
+    "Metadata kommer med i den tekst, der embeddes i trin 3. Hold den kort og ikke-identificerende.",
+    "Medarbejdernøglen må ikke ligge i Kuras metadata, fordi metadata embeddes i trin 3. Kobl den på via samtale-id'et, efter klyngerne er dannet.",
+    "Små institutioner har få samtaler, selv når alle kommer med. Deres kort kan dække et kvartal i stedet for en måned."
+  ]},
+{ n:2, type:"llm", tagText:"LLM", title:"Opsummér hver samtale", sub:"LLM udfylder en fast skabelon",
+  fn:"summarise_conversations()",
+  lede:"En sprogmodel læser hver samtale og udfylder en fast skabelon: hvad brugeren ville, hvilken opgave det var, hvilket sprog der blev brugt, og hvor frustreret brugeren var. Modellen får besked på at udelade navne, adresser og andre personoplysninger. Herfra arbejder pipelinen kun med resuméerne, aldrig med de rå samtaler.",
+  algoTitle:"Sådan virker det",
+  algo:[
+    "Samtalen sættes ind i en fast prompt med instruktioner: vær beskrivende, udelad personoplysninger og egennavne, og hold resuméet under ca. 30 ord.",
+    "Modellen svarer i et struktureret format (JSON), som kontrolleres mod et skema. Et svar, der ikke passer til skemaet, bliver afvist.",
+    "Skemaet har faste felter: resumé, anmodning, opgave, sprog, bekymringsscore (1–5), frustration (1–5) og assistentens fejl. Vi kan selv tilføje felter.",
+    "Resultatet gemmes i en cache og i checkpoint-filer, så samme samtale ikke skal behandles og betales to gange."
+  ],
+  inTitle:"Den rå samtale (med personoplysninger)", inHtml:RAW,
+  outTitle:"Struktureret, anonymt resumé", outHtml:SUMMARY_JSON,
+  smart:[
+    "Privatliv er bygget ind: de rå samtaler bruges kun her. Resten af analysen sker på anonyme resuméer.",
+    "Struktureret output kan tælles. Vi kan fx beregne gennemsnitlig frustration pr. klynge i stedet for at læse fritekst.",
+    "Skabelonen kan udvides med felter, der giver mening for os, fx forvaltningsområde, eller om der blev indsat personoplysninger."
+  ],
+  say:"En sprogmodel skriver et kort, anonymt resumé af hver samtale. Det er kun resuméerne, vi arbejder videre med.",
+  params:[["Model (standard)","openai/gpt-4o-mini"],["Andre modeller","fx ollama/… (lokal) eller azure_openai/…"],["Struktureret output","Pydantic-skema via biblioteket instructor"],["Temperatur","0,2"],["Parallelle kald","50"],["Vores plan","Gemma 4 31B på egne H100-kort via vLLM"],["Cache","valgfri, fx DiskCacheStrategy"]],
+  code:`<span class="k">from</span> kura.summarisation <span class="k">import</span> SummaryModel, summarise_conversations
+<span class="k">from</span> kura.types.summarisation <span class="k">import</span> GeneratedSummary
+
+<span class="k">class</span> Opsummering(GeneratedSummary):
+    forvaltningsomraade: str | None = None
+    personoplysninger_i_prompt: bool | None = None
+
+opsummeringer = <span class="k">await</span> summarise_conversations(
+    samtaler,
+    model=SummaryModel(model="openai/gpt-4o-mini"),
+    response_schema=Opsummering,
+    checkpoint_manager=checkpoints,
+)`,
+  pitfalls:[
+    "Standardprompten er på engelsk og giver engelske resuméer. Den bør oversættes og tilpasses vores felter.",
+    "At udelade personoplysninger er en instruktion til modellen, ikke en garanti. Mål på testdata, hvor ofte noget slipper igennem.",
+    "Prompten er skrevet til sikkerhedsovervågning (»beskriv skadelige emner præcist«). Til vores formål bør fokus flyttes til opgaver og behov.",
+    "Ekstra felter fra et udvidet skema gemmes i metadata og kommer dermed også med i embedding-teksten i trin 3."
+  ]},
+{ n:3, type:"ml", tagText:"ML", title:"Lav embeddings", sub:"Tekst bliver til talvektorer",
+  fn:"OpenAIEmbeddingModel · SentenceTransformerEmbeddingModel",
+  lede:"Hvert resumé omsættes til en lang række tal, en vektor, af en embedding-model. Tekster med samme betydning får vektorer, der ligger tæt på hinanden, også når de bruger forskellige ord. Det gør det muligt at regne på betydning.",
+  algoTitle:"Sådan virker det",
+  algo:[
+    "Resuméet sendes gennem en embedding-model: et neuralt netværk, der er trænet på store mængder tekst til at placere ens betydninger tæt på hinanden.",
+    "Ud kommer en vektor med typisk flere hundrede til et par tusind tal. OpenAI's standardmodel giver 1.536 tal.",
+    "Ligheden mellem to tekster måles som vinklen mellem deres vektorer (cosinus-lighed). Tæt på 1 betyder næsten samme betydning; tæt på 0 betyder lidt til fælles.",
+    "Teksterne sendes i bundter (batches), så tusindvis kan behandles på kort tid."
+  ],
+  extra:"sim",
+  inTitle:"Resuméet som tekst", inHtml:SUMMARY_TEXT,
+  outTitle:"En vektor", outHtml:VECTOR,
+  smart:[
+    "Fanger betydning frem for nøgleord: »afslag i klart sprog« og »gøre et afgørelsesbrev forståeligt« havner tæt på hinanden uden fælles ord.",
+    "Embeddings er hurtige og langt billigere end kald til en sprogmodel.",
+    "Kan køre lokalt med open source-modeller, så teksten ikke forlader vores servere."
+  ],
+  say:"Hvert resumé bliver til en slags koordinat, og resuméer med samme betydning lander tæt på hinanden.",
+  params:[["Model (standard)","OpenAI text-embedding-3-small (1.536 dimensioner)"],["Lokal mulighed","SentenceTransformerEmbeddingModel, standard all-MiniLM-L6-v2"],["Også understøttet","Cohere"],["Hvornår","kaldes inde i trin 4 og igen i trin 6 og 7"]],
+  code:`<span class="k">from</span> kura.embedding <span class="k">import</span> SentenceTransformerEmbeddingModel
+
+<span class="c"># Flersproget model, der kører lokalt</span>
+embedder = SentenceTransformerEmbeddingModel(
+    model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+)`,
+  pitfalls:[
+    "Kura embedder hele resumé-objektet som tekst, inklusive samtale-id og metadata, ikke kun selve resuméet. Det kan trække klyngerne i en uønsket retning. Clio embedder ét bestemt felt, og det bør vi også.",
+    "Den lokale standardmodel all-MiniLM-L6-v2 er trænet på engelsk. Vælg en flersproget model til danske tekster.",
+    "Brug samme embedding-model i hele kørslen. Skifter man model, ændres alle afstande."
+  ]},
+{ n:4, type:"ml", tagText:"ML", title:"Gruppér i basisklynger", sub:"K-means, ca. 10 pr. klynge",
+  fn:"generate_base_clusters_from_conversation_summaries()",
+  lede:"Resuméerne grupperes efter, hvor tæt deres vektorer ligger. Standardmetoden er k-means, som deler dem i grupper på omkring 10 samtaler hver. Resultatet er mange små, ensartede grupper, der bliver byggestenene til kortet.",
+  algoTitle:"Sådan virker det (k-means)",
+  algo:[
+    "Bestem antallet af grupper: k = antal samtaler ÷ 10, rundet op. 100.000 samtaler giver 10.000 grupper.",
+    "Placér k startcentre spredt ud blandt punkterne (k-means++).",
+    "Tildel hvert resumé til det nærmeste center.",
+    "Flyt hvert center til gennemsnittet af de resuméer, der hører til det.",
+    "Gentag trin 3 og 4, indtil grupperne holder op med at ændre sig."
+  ],
+  algoNote:"Alternativ i Kura: HDBSCAN finder selv antallet af klynger ud fra, hvor tæt punkterne ligger, og markerer punkter, der ikke passer nogen steder, som støj.",
+  extra:"kmeans",
+  inTitle:"Vektorerne fra trin 3", inHtml:VECTORS_IN,
+  outTitle:"Små grupper af beslægtede resuméer", outHtml:GROUP_OUT,
+  smart:[
+    "Forudsigelig størrelse: grupper på ca. 10 er lige tilpas til, at en sprogmodel kan læse dem alle og give dem et præcist navn i næste trin.",
+    "Skalerer: k-means er en af de hurtigste klyngemetoder, og Kura har en MiniBatch-variant til over 100.000 samtaler.",
+    "Hierarkiet bygges nedefra, så de fine nuancer i de små grupper går ikke tabt, når vi senere samler dem i brede temaer."
+  ],
+  say:"Resuméerne samles i små grupper på cirka ti, der handler om det samme.",
+  params:[["Metode (standard)","KmeansClusteringModel(clusters_per_group=10) → scikit-learn KMeans, k = ⌈n/10⌉"],["Store datasæt","MiniBatchKmeansClusteringMethod (batch 1.000, max_iter 100, random_state 42)"],["Alternativ","HDBSCANClusteringMethod(min_cluster_size=10)"],["Afstand","euklidisk på embedding-vektorerne"]],
+  code:`<span class="k">from</span> kura.cluster <span class="k">import</span> (
+    ClusterDescriptionModel,
+    KmeansClusteringModel,
+    generate_base_clusters_from_conversation_summaries,
+)
+
+klynger = <span class="k">await</span> generate_base_clusters_from_conversation_summaries(
+    opsummeringer,
+    embedding_model=embedder,
+    clustering_method=KmeansClusteringModel(clusters_per_group=10),
+    clustering_model=ClusterDescriptionModel(model="openai/gpt-4o-mini"),
+    checkpoint_manager=checkpoints,
+)
+<span class="c"># Trin 3, 4 og 5 sker i dette ene kald</span>`,
+  pitfalls:[
+    "Standard-k-means har ikke et fast random seed, så to kørsler giver lidt forskellige klynger. Sæt et seed, eller brug MiniBatch-varianten med random_state.",
+    "k-means tvinger alle punkter ind i en klynge, også dem der ikke passer nogen steder.",
+    "Med HDBSCAN lægger Kura alle støjpunkter i én ekstra klynge, som let bliver en blandet rodekasse.",
+    "Kura har ingen minimumsstørrelse for klynger (Clios aggregeringstærskel). Den bør vi tilføje af hensyn til privatlivet, både på fælleskortet og på hvert institutionskort for sig.",
+    "README-eksemplet sender model=… til funktionen, men parameteren hedder clustering_model=. Ellers bruges standardmodellen uden varsel."
+  ]},
+{ n:5, type:"llm", tagText:"LLM", title:"Navngiv klyngerne", sub:"LLM med kontrasteksempler",
+  fn:"ClusterDescriptionModel",
+  lede:"En sprogmodel læser resuméerne i hver gruppe og skriver et kort navn og en beskrivelse på to sætninger. For at navnet bliver præcist, får modellen også eksempler fra andre grupper, så den kan beskrive, hvad der gør netop denne gruppe anderledes.",
+  algoTitle:"Sådan virker det",
+  algo:[
+    "Modellen får alle resuméer i gruppen: de positive eksempler.",
+    "Den får også op til 10 tilfældige resuméer fra andre grupper: kontrasteksemplerne.",
+    "Den skriver en beskrivelse på to sætninger i datid og et navn på højst ti ord i bydeform, fx »Omskriv afslag til klart sprog«.",
+    "Klyngen gemmer navn, beskrivelse og listen over de samtale-id'er, den dækker."
+  ],
+  inTitle:"Gruppens resuméer + kontrast", inHtml:NAME_IN,
+  outTitle:"En navngivet klynge", outHtml:NAME_OUT,
+  smart:[
+    "Læsbare navne i stedet for klyngenumre eller ordlister, som klassiske emnemodeller (fx LDA) giver.",
+    "Kontrasteksemplerne tvinger modellen til at være specifik: »Omskriv afslag til klart sprog« frem for det intetsigende »Hjælp med tekst«.",
+    "Bydeformen beskriver, hvad brugeren ville have gjort. Det kan bruges direkte, når vi prioriterer."
+  ],
+  say:"En sprogmodel giver hver gruppe et navn, der beskriver, hvad brugerne ville have hjælp til.",
+  params:[["Model (standard)","openai/gpt-4o-mini"],["Temperatur","0,2"],["Kontrasteksempler","op til 10, tilfældigt udvalgt fra andre klynger"],["Output","name, summary og slug (kort id)"]],
+  code:`<span class="c"># Uddrag af Kuras navngivningsprompt (oversat)</span>
+Opsummér udsagnene i en præcis beskrivelse på to
+sætninger i datid. Navnet skal være en sætning i
+bydeform på højst ti ord, som adskiller gruppen fra
+kontrasteksemplerne.
+
+&lt;positive_examples&gt; … &lt;/positive_examples&gt;
+&lt;contrastive_examples&gt; … &lt;/contrastive_examples&gt;`,
+  pitfalls:[
+    "Kontrasteksemplerne er tilfældige, ikke de nærmeste naboklynger. To næsten ens klynger kan derfor få næsten ens navne.",
+    "Navngivningsprompten indeholder ingen instruktion om privatliv (Clios tredje lag). Den bør tilføjes.",
+    "Prompten foretrækker eksplicit navne på skadelige emner, fordi den er lavet til sikkerhedsovervågning. Tilpas den til vores formål."
+  ]},
+{ n:6, type:"mix", tagText:"LLM + ML", title:"Byg hierarkiet", sub:"Meta-klyngeløkke, gentages",
+  sub2:[["ml","Gruppér"],["llm","Foreslå"],["llm","Tildel"],["llm","Omdøb"]],
+  fn:"reduce_clusters_from_base_clusters()",
+  lede:"Ti tusind små klynger er for mange at overskue. Derfor bliver de gentagne gange samlet i bredere kategorier, indtil der er et håndterbart antal på toppen. Resultatet er et træ med få brede temaer øverst og de præcise basisklynger nederst.",
+  algoTitle:"Sådan virker det (én runde)",
+  algo:[
+    "Gruppér (ML): Klyngernes navne og beskrivelser embeddes, og k-means samler dem i grupper på ca. 12.",
+    "Foreslå forældre (LLM): For hver gruppe foreslår modellen bredere navne, højst halvt så mange som der er klynger i gruppen.",
+    "Tildel (LLM): Hver klynge placeres under præcis ét af forslagene. Svaret skal matche et forslag (mindst 90 % tekstlighed), ellers spørges der igen, op til tre gange.",
+    "Omdøb (LLM): Hver forælder får et endeligt navn og en beskrivelse ud fra sine børn og arver alle deres samtaler.",
+    "Forældrene bliver input til næste runde, indtil der højst er max_clusters klynger på toppen (standard 10)."
+  ],
+  extra:"loop",
+  inTitle:"10.000 navngivne basisklynger", inHtml:`<pre class="code">Omskriv afslag på økonomisk hjælp til klart sprog
+Formulér partshøring om oplysninger fra arbejdsgiver
+Ret XOPSLAG-formler i opgørelser
+Skriv stillingsopslag til socialrådgivere
+<span class="c">… 9.996 klynger mere</span></pre>`,
+  outTitle:"Et træ, hvor eksemplet har fået forældre", outHtml:TREE_OUT,
+  smart:[
+    "Taksonomien kommer fra data. Vi skal ikke definere kategorierne på forhånd, og nye brugsmønstre dukker op af sig selv.",
+    "Hvert LLM-kald ser kun ca. 12 klynger ad gangen, så metoden skalerer til millioner af samtaler.",
+    "Valideringen forhindrer modellen i at opfinde kategorier, der ikke blev foreslået.",
+    "Træet giver zoomniveauer til forskellige læsere: ledelsen ser fem temaer, fagfolk ser de præcise opgaver."
+  ],
+  say:"Grupperne samles i stadig bredere temaer, så vi får et træ, man kan zoome ind og ud i.",
+  params:[["Model (standard)","openai/gpt-4o-mini"],["Gruppering","KmeansClusteringModel(12) på navn + beskrivelse"],["Antal forslag","⌈n/2⌉ pr. gruppe (1, hvis gruppen har under 3 klynger)"],["Validering","præcist match eller fuzzy-match ≥ 90 (rapidfuzz), op til 3 forsøg"],["Stopkriterium","max_clusters = 10 klynger på toppen"]],
+  code:`<span class="k">from</span> kura.meta_cluster <span class="k">import</span> MetaClusterModel, reduce_clusters_from_base_clusters
+
+hierarki = <span class="k">await</span> reduce_clusters_from_base_clusters(
+    klynger,
+    model=MetaClusterModel(max_clusters=10),
+    checkpoint_manager=checkpoints,
+)`,
+  pitfalls:[
+    "En klynge kan kun lægges sammen med klynger i samme k-means-gruppe i den pågældende runde. To beslægtede klynger i hver sin gruppe kan ende under hver sin forælder.",
+    "Træet kan blive skævt: nogle grene får flere niveauer end andre.",
+    "Antallet af runder afhænger af datamængden. max_clusters styrer kun antallet på toppen.",
+    "Omdøbningsprompten har heller ingen instruktion om privatliv.",
+    "Mange LLM-kald: tre typer kald pr. gruppe pr. runde. Brug checkpoints, så en afbrudt kørsel kan genoptages."
+  ]},
+{ n:7, type:"ml", tagText:"ML", title:"Placér klyngerne på et kort", sub:"UMAP til 2D",
+  fn:"reduce_dimensionality_from_clusters()",
+  lede:"For at kunne tegne et kort embeddes alle klynger på alle niveauer igen, og UMAP presser de mange dimensioner ned til to: x og y. Klynger, der ligner hinanden, lander tæt på hinanden. Trinnet ændrer ikke klyngerne; det er kun til visning.",
+  algoTitle:"Sådan virker det (UMAP)",
+  algo:[
+    "Find for hver klynge dens nærmeste naboer i det høj-dimensionelle rum (op til 15, målt med cosinus-lighed).",
+    "Byg et netværk, hvor nære naboer er forbundet med stærke bånd og fjernere naboer med svage.",
+    "Læg punkterne ud i 2D som et første udkast.",
+    "Træk forbundne punkter mod hinanden og skub ikke-forbundne fra hinanden, indtil 2D-billedet ligner netværket så godt som muligt. min_dist = 0,1 bestemmer, hvor tæt punkterne må pakkes."
+  ],
+  inTitle:"Alle klynger på alle niveauer", inHtml:`<pre class="code">10.000 + 2.840 + 810 + 230 + 66 + 23 + 11 + 5
+= 13.985 klynger
+
+"Name: Omskriv afgørelsesbreve til borgere i klart sprog
+ Description: Brugerne fik afslag og andre afgørelser omskrevet …"
+<span class="c">… embeddes igen som i trin 3</span></pre>`,
+  outTitle:"Hver klynge får x og y", outHtml:PROJ_OUT,
+  smart:[
+    "Bevarer naboskaber: klynger, der ligner hinanden, ligger tæt. Derfor er UMAP bedre til kort end lineære metoder som PCA.",
+    "Giver et intuitivt kort, som ikke-tekniske kolleger kan aflæse på få sekunder.",
+    "Er hurtigt, også med tusindvis af punkter."
+  ],
+  say:"Kortet placerer emner, der ligner hinanden, tæt på hinanden. Det er en visning, ikke en ny analyse.",
+  params:[["Metode","UMAP (umap-learn)"],["Dimensioner","n_components = 2"],["Naboer","n_neighbors = min(15, n − 1)"],["Pakning","min_dist = 0,1"],["Afstandsmål","cosinus"]],
+  code:`<span class="k">from</span> kura.dimensionality <span class="k">import</span> HDBUMAP, reduce_dimensionality_from_clusters
+
+kort = <span class="k">await</span> reduce_dimensionality_from_clusters(
+    hierarki,
+    model=HDBUMAP(embedding_model=embedder),
+    checkpoint_manager=checkpoints,
+)`,
+  pitfalls:[
+    "Navnet HDBUMAP er misvisende: klassen kører kun UMAP. Der indgår ingen HDBSCAN.",
+    "Afstande mellem fjerne »øer« på kortet betyder ikke noget. Kun naboskaber er til at stole på, og akserne har ingen betydning.",
+    "Kortet ser lidt forskelligt ud fra kørsel til kørsel, fordi UMAP indeholder tilfældighed.",
+    "Standardargumentet i HDBUMAP opretter en OpenAI-klient, allerede når modulet importeres. Uden OPENAI_API_KEY fejler importen, så sæt en dummy-nøgle, hvis alt kører lokalt."
+  ]},
+{ n:8, type:"view", tagText:"Visning", title:"Udforsk kortet", sub:"Træ og kort i en webapp",
+  fn:"kura start-app",
+  lede:"Resultaterne gemmes som filer (checkpoints), og Kura har en lille webapp, hvor man kan klikke rundt i træet og på kortet. Hos os kobles resultatet med metadata, så vi får ét fælles kort for alle 130 institutioner og et kort til hver institution, og vi kan følge billedet fra måned til måned.",
+  algoTitle:"Sådan foregår det",
+  algo:[
+    "Checkpoint-filerne med resuméer, klynger, træ og koordinater indlæses.",
+    "Vi opgør antal samtaler og facetter som frustration og fejl pr. klynge, både samlet og pr. institution ud fra metadata, som i demoen.",
+    "Klynger under mindstegrænsen fjernes fra hvert kort for sig: fælleskortet og hvert af de 130 institutionskort.",
+    "Fælleskortet bruges centralt. Et lille script laver desuden én selvstændig side pr. institution med institutionens egne tal og tallene for alle 130 til sammenligning.",
+    "Kørslen kan gentages hver måned med samme opsætning, så udviklingen kan følges."
+  ],
+  inTitle:"Checkpoint-filer", inHtml:`<pre class="code">checkpoints/
+  summaries.jsonl
+  clusters.jsonl
+  meta_clusters.jsonl
+  dimensionality.jsonl</pre>`,
+  outTitle:"Ét fælles kort og 130 institutionskort", outHtml:`<p class="sub">Fem overordnede temaer øverst, konkrete opgaver nederst, med antal samtaler og facetter for hver klynge, samlet og for hver institution.</p><p><a class="btn down" href="#demo">Gå til demoen af kortet</a></p>`,
+  smart:[
+    "Ét fælles billede af, hvad 130 institutioner bruger StatGPT til.",
+    "Hver institution får sit eget kort i de samme kategorier, så ledelsen kan sammenligne sig med alle 130.",
+    "Grundlag for konkrete beslutninger om kurser, skabeloner, integrationer og retningslinjer.",
+    "Kan gentages hver måned, så vi kan se tendenser og effekten af det, vi sætter i gang."
+  ],
+  say:"Slutproduktet er et fælles kort og et kort til hver institution, hvor man kan zoome fra fem overordnede temaer ned til de konkrete opgaver.",
+  params:[["Start","kura start-app --dir ./checkpoints"],["Adresse","http://localhost:8000"],["Server","FastAPI via uvicorn"],["Checkpoint-formater","JSONL (standard), Parquet, Hugging Face-datasæt, SQL"],["Institutionskort","ikke en del af Kura; egen optælling pr. institution ud fra metadata"]],
+  code:`kura start-app --dir ./checkpoints
+<span class="c"># Åbn http://localhost:8000 (kun internt, intet login)</span>
+
+<span class="c"># Institutionskort: samme træ, talt op pr. institution (skitse)</span>
+<span class="k">for</span> inst <span class="k">in</span> institutioner:
+    kort = optael(hierarki, opsummeringer, institution=inst)
+    kort = fjern_smaa_klynger(kort, min_samtaler=25, min_medarbejdere=5)
+    gem_side(kort, sammenlign_med=faelleskort, fil=f"kort/{inst}.html")`,
+  pitfalls:[
+    "Webappen lytter på 0.0.0.0, accepterer forespørgsler fra alle domæner (CORS) og har intet login. Den kan bruges internt bag vores egen adgangsstyring, men ikke til at dele institutionskortene.",
+    "Optællingen pr. institution og måned skal vi selv bygge. Kura tæller kun samlet.",
+    "Mindstegrænsen skal gælde for hvert institutionskort for sig: en klynge med 2.000 samtaler i alt kan have under 25 fra en lille institution.",
+    "Klyngenavne og beskrivelser er skrevet ud fra alle institutioners samtaler, så de passer ikke altid præcist på den enkelte institution.",
+    "Vis kun klyngenavne og tal på institutionskortene, ikke de enkelte resuméer, som i Clio, hvor analytikere kun ser det færdige klyngehierarki."
+  ]}
+];
+
+/* ---------- extras inside stage panels ---------- */
+const EXTRAS = {
+  sim:{ html:`<h4>Eksempel: hvor ens er to tekster?</h4>
+    <div class="sim" role="table" aria-label="Cosinus-lighed mellem eksempeltekster">
+      ${[["»Omskriv et afslag til klart sprog« og »Gør et afgørelsesbrev lettere at forstå«",0.91],
+         ["»Omskriv et afslag til klart sprog« og »Skriv et svar til en borger om ventetid«",0.58],
+         ["»Omskriv et afslag til klart sprog« og »Ret en XOPSLAG-formel i Excel«",0.12]]
+        .map(([t,v])=>`<div class="sim-row" role="row"><span role="cell">${t}</span><span class="sim-bar" role="cell" aria-hidden="true"><span style="width:${v*100}%"></span></span><span class="sim-v" role="cell">${nf.format(v)}</span></div>`).join("")}
+    </div>
+    <p class="note">Illustrative værdier for cosinus-lighed (0 til 1). De to første tekster deler næsten ingen ord, men ligger tæt.</p>` },
+  kmeans:{ html:`<h4>Prøv selv: k-means på 60 punkter</h4>
+    <div class="km" id="km">
+      <svg viewBox="0 0 420 230" role="img" aria-label="Animation af k-means med tre grupper"></svg>
+      <div class="km-legend"><span><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="#343536"/></svg>Gruppe 1</span><span><svg width="12" height="12" aria-hidden="true"><rect x="1" y="1" width="10" height="10" fill="#066B43"/></svg>Gruppe 2</span><span><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="4.5" fill="#FFFFFF" stroke="#343536" stroke-width="2"/></svg>Gruppe 3</span><span>Store figurer med kryds = centre</span></div>
+      <div class="km-ctl">
+        <button type="button" class="btn primary" id="km-step">Næste skridt</button>
+        <button type="button" class="btn" id="km-run">Kør til stabil</button>
+        <button type="button" class="btn" id="km-new">Nyt eksempel</button>
+      </div>
+      <p class="km-status" id="km-status" aria-live="polite"></p>
+    </div>
+    <p class="note">I demoen er der 2 dimensioner og 3 grupper. I Kura sker præcis det samme med 1.536 dimensioner og 10.000 grupper.</p>`,
+    init: initKmeans },
+  loop:{ html:`<h4>Løkken, der bygger træet</h4>
+    <div class="loop">
+      <div class="loop-step" data-type="ml"><span class="tag">ML</span><b>1 · Gruppér</b><p>Embed klyngerne og saml dem i grupper på ca. 12 med k-means.</p></div>
+      <div class="loop-step" data-type="llm"><span class="tag">LLM</span><b>2 · Foreslå</b><p>Foreslå bredere forældrenavne, højst halvt så mange som klynger.</p></div>
+      <div class="loop-step" data-type="llm"><span class="tag">LLM</span><b>3 · Tildel</b><p>Læg hver klynge under præcis én forælder. Svaret valideres.</p></div>
+      <div class="loop-step" data-type="llm"><span class="tag">LLM</span><b>4 · Omdøb</b><p>Skriv endeligt navn og beskrivelse for hver forælder.</p></div>
+    </div>
+    <div class="loop-foot" aria-label="Antal klynger efter hver runde">
+      <span class="rchip"><small>Basis</small><strong>10.000</strong></span><span class="rarrow">→</span>
+      <span class="rchip"><small>Runde 1</small><strong>2.840</strong></span><span class="rarrow">→</span>
+      <span class="rchip"><small>Runde 2</small><strong>810</strong></span><span class="rarrow">→</span>
+      <span class="rchip"><small>Runde 3</small><strong>230</strong></span><span class="rarrow">→</span>
+      <span class="rchip"><small>Runde 4</small><strong>66</strong></span><span class="rarrow">→</span>
+      <span class="rchip"><small>Runde 5</small><strong>23</strong></span><span class="rarrow">→</span>
+      <span class="rchip"><small>Runde 6</small><strong>11</strong></span><span class="rarrow">→</span>
+      <span class="rchip"><small>Runde 7</small><strong>5</strong></span>
+    </div>
+    <p class="note">Eksempel med 100.000 samtaler og max_clusters = 5, så de tre sidste runder giver de 23 klynger, 11 klynger og fem temaer, som du ser i demoen. Med standarden 10 havde løkken stoppet ved højst 10 temaer.</p>` }
+};
+
+/* ---------- render stage list ---------- */
+const listEl = $("#stage-list");
+const detailEl = $("#detail");
+let current = 0;
+
+function tag(type, text){ return `<span class="tag" data-type="${type}">${text}</span>`; }
+
+listEl.innerHTML = STAGES.map((s,i)=>`<li><button type="button" class="stage-btn" data-type="${s.type}" data-i="${i}" id="stage-${s.n}">
+  <span class="num">${s.n}</span>
+  <span><span class="st-title">${s.title}</span><span class="st-sub">${s.sub}</span>${s.sub2?`<span class="subchips">${s.sub2.map(([t,l])=>`<span class="subchip" data-type="${t}">${l}</span>`).join("")}<span class="loopnote">↻</span></span>`:""}</span>
+  ${tag(s.type, s.tagText)}
+</button></li>`).join("");
+
+listEl.addEventListener("click", e=>{
+  const b = e.target.closest(".stage-btn"); if(!b) return;
+  select(+b.dataset.i, true);
+});
+listEl.addEventListener("keydown", e=>{
+  const b = e.target.closest(".stage-btn"); if(!b) return;
+  let i = +b.dataset.i;
+  if(e.key==="ArrowDown"||e.key==="ArrowRight"){ i=Math.min(STAGES.length-1,i+1); }
+  else if(e.key==="ArrowUp"||e.key==="ArrowLeft"){ i=Math.max(0,i-1); }
+  else return;
+  e.preventDefault(); select(i,false); listEl.querySelector(`[data-i="${i}"]`).focus();
+});
+
+function select(i, fromClick){
+  current = i;
+  listEl.querySelectorAll(".stage-btn").forEach(b=>{
+    if(+b.dataset.i===i) b.setAttribute("aria-current","step"); else b.removeAttribute("aria-current");
+  });
+  renderDetail(i);
+  if(fromClick && window.matchMedia("(max-width: 980px)").matches){
+    detailEl.scrollIntoView({behavior: reduceMotion()?"auto":"smooth", block:"start"});
+  }
+}
+
+function renderDetail(i){
+  const s = STAGES[i];
+  const prev = STAGES[i-1], next = STAGES[i+1];
+  detailEl.setAttribute("data-type", s.type);
+  detailEl.innerHTML = `
+    <div class="detail-head"><span>Trin ${s.n} af ${STAGES.length}</span>${tag(s.type,s.tagText)}<code class="fn">${s.fn}</code></div>
+    <h3>${s.title}</h3>
+    <p class="lede">${s.lede}</p>
+    <section class="block"><h4>${s.algoTitle}</h4><ol class="algo">${s.algo.map(a=>`<li><span>${a}</span></li>`).join("")}</ol>${s.algoNote?`<p class="note">${s.algoNote}</p>`:""}</section>
+    ${s.extra?`<section class="block" id="extra">${EXTRAS[s.extra].html}</section>`:""}
+    <section class="block"><h4>Følg eksemplet</h4>
+      <div class="io">
+        <div class="io-card"><div class="io-label"><b>Ind</b>${s.inTitle}</div>${s.inHtml}</div>
+        <div class="io-card"><div class="io-label"><b>Ud</b>${s.outTitle}</div>${s.outHtml}</div>
+      </div>
+    </section>
+    <section class="block"><h4>Hvorfor er det smart?</h4><ul class="smart">${s.smart.map(t=>`<li>${ICON_OK}<span>${t}</span></li>`).join("")}</ul></section>
+    <section class="block say"><h4>Kort sagt</h4><blockquote>${s.say}</blockquote></section>
+    <p class="hint overview-only">Vil du se de tekniske detaljer, så vælg »Teknisk« øverst på siden. Der står Kuras standardindstillinger, kode og faldgruber.</p>
+    <section class="block tech-only"><h4>Kuras standardindstillinger</h4><dl class="params">${s.params.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl></section>
+    <section class="block tech-only"><h4>Kode (forenklet)</h4><pre class="code">${s.code}</pre></section>
+    <section class="block tech-only"><h4>Faldgruber, og hvad vi bør ændre</h4><ul class="pitfalls">${s.pitfalls.map(t=>`<li>${ICON_WARN}<span>${t}</span></li>`).join("")}</ul></section>
+    <div class="pager">
+      <button type="button" class="btn back" id="pg-prev" ${prev?"":"disabled"}>${prev?"Forrige: "+prev.title:"Forrige"}</button>
+      <button type="button" class="btn primary" id="pg-next" ${next?"":"disabled"}>${next?"Næste: "+next.title:"Næste"}</button>
+    </div>`;
+  if(s.extra && EXTRAS[s.extra].init) EXTRAS[s.extra].init(detailEl.querySelector("#extra"));
+  const p = $("#pg-prev", detailEl), n = $("#pg-next", detailEl);
+  if(prev) p.addEventListener("click", ()=>{ select(i-1,false); detailEl.scrollIntoView({behavior: reduceMotion()?"auto":"smooth", block:"start"}); });
+  if(next) n.addEventListener("click", ()=>{ select(i+1,false); detailEl.scrollIntoView({behavior: reduceMotion()?"auto":"smooth", block:"start"}); });
+}
+
+/* ---------- k-means mini demo ---------- */
+function initKmeans(root){
+  const svg = root.querySelector("svg");
+  const status = root.querySelector("#km-status");
+  const W=420, H=230, K=3;
+  let seed = 11, pts=[], cents=[], asg=[], phase="start", round=0, done=false, timer=null;
+  function gauss(rng){ let u=0,v=0; while(!u)u=rng(); while(!v)v=rng(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
+  function gen(){
+    const rng = mulberry32(seed);
+    const blobs = [[95+rng()*30,70+rng()*20],[300+rng()*30,70+rng()*25],[200+rng()*30,165+rng()*15]];
+    pts=[];
+    blobs.forEach(([bx,by])=>{ for(let i=0;i<20;i++){ pts.push({x:Math.min(W-12,Math.max(12,bx+gauss(rng)*26)), y:Math.min(H-12,Math.max(12,by+gauss(rng)*20))}); } });
+    // k-means++ start
+    cents=[ {...pts[Math.floor(rng()*pts.length)]} ];
+    while(cents.length<K){
+      const d2 = pts.map(p=>Math.min(...cents.map(c=>(p.x-c.x)**2+(p.y-c.y)**2)));
+      const sum = d2.reduce((a,b)=>a+b,0); let r=rng()*sum, j=0;
+      while(r>d2[j]){ r-=d2[j]; j++; }
+      cents.push({...pts[Math.min(j,pts.length-1)]});
+    }
+    asg = pts.map(()=>-1); phase="assign"; round=0; done=false;
+    status.textContent = "Tre startcentre er valgt med k-means++, så de ligger spredt. Tryk »Næste skridt«.";
+    draw();
+  }
+  function mark(p, g){
+    if(g===1) return `<rect class="kp k1" x="${(p.x-4.5).toFixed(1)}" y="${(p.y-4.5).toFixed(1)}" width="9" height="9"></rect>`;
+    return `<circle class="kp ${g<0?"kn":"k"+g}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${g<0?4:5}"></circle>`;
+  }
+  function centre(c, k){
+    const shape = k===1 ? '<rect x="-9" y="-9" width="18" height="18"></rect>' : '<circle r="10"></circle>';
+    return `<g class="kc k${k}" style="transform:translate(${c.x.toFixed(1)}px,${c.y.toFixed(1)}px)">${shape}<line x1="-4" y1="-4" x2="4" y2="4"></line><line x1="4" y1="-4" x2="-4" y2="4"></line></g>`;
+  }
+  function drawPts(){ svg.querySelector(".pts").innerHTML = pts.map((p,i)=>mark(p, asg[i])).join(""); }
+  function draw(){
+    svg.innerHTML = `<g class="pts"></g><g class="cts">${cents.map((c,k)=>centre(c,k)).join("")}</g>`;
+    drawPts();
+  }
+  function update(){
+    // keep centre nodes so CSS transitions animate
+    const gs = svg.querySelectorAll(".kc");
+    cents.forEach((c,k)=>{ if(gs[k]) gs[k].style.transform=`translate(${c.x.toFixed(1)}px,${c.y.toFixed(1)}px)`; });
+    drawPts();
+  }
+  function step(){
+    if(done) return;
+    if(phase==="assign"){
+      let changes=0;
+      pts.forEach((p,i)=>{ let best=0,bd=Infinity; cents.forEach((c,k)=>{ const d=(p.x-c.x)**2+(p.y-c.y)**2; if(d<bd){bd=d;best=k;} }); if(asg[i]!==best){changes++; asg[i]=best;} });
+      if(round>0 && changes===0){ done=true; status.textContent=`Stabil efter ${round} runder: ingen punkter skifter gruppe længere. Det er k-means' stopkriterium.`; update(); return; }
+      status.textContent = round===0 ? "Runde 1, tildel: hvert punkt får figur og farve efter det nærmeste center." : `Runde ${round+1}, tildel: ${changes} ${changes===1?"punkt":"punkter"} skiftede til et nærmere center.`;
+      phase="update";
+    } else {
+      cents = cents.map((c,k)=>{ const m=pts.filter((_,i)=>asg[i]===k); if(!m.length) return c; return {x:m.reduce((a,p)=>a+p.x,0)/m.length, y:m.reduce((a,p)=>a+p.y,0)/m.length}; });
+      round++;
+      status.textContent = `Runde ${round}, flyt: hvert center er flyttet til gennemsnittet af sine punkter.`;
+      phase="assign";
+    }
+    update();
+  }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; } }
+  root.querySelector("#km-step").addEventListener("click", ()=>{ stop(); step(); });
+  root.querySelector("#km-run").addEventListener("click", ()=>{
+    stop();
+    if(reduceMotion()){ let guard=0; while(!done && guard++<60) step(); return; }
+    timer = setInterval(()=>{ step(); if(done) stop(); }, 550);
+  });
+  root.querySelector("#km-new").addEventListener("click", ()=>{ stop(); seed += 7; gen(); });
+  gen();
+}
+
+/* ---------- view toggle ---------- */
+function setView(v){
+  document.body.dataset.view = v;
+  document.querySelectorAll(".viewctl [data-view]").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.view===v)));
+  store("kura-view", v);
+}
+document.querySelectorAll(".viewctl [data-view]").forEach(b=>b.addEventListener("click", ()=>setView(b.dataset.view)));
+const savedView = load("kura-view"); if(savedView==="teknisk"||savedView==="overblik") setView(savedView);
+
+/* ---------- caveats ---------- */
+const CAV = [
+  ["Anonymiseringen er ikke en garanti",
+   `Sprogmodellen bliver bedt om at udelade personoplysninger, men det er en instruktion, ikke en matematisk garanti. Forskere har vist angreb, der kan få oplysninger til at slippe igennem.<sup><a href="#kilde-8">8</a></sup><sup><a href="#kilde-9">9</a></sup>`,
+   `Minimumsstørrelse for klynger, automatisk privacy-tjek af klyngenavne og adgangsstyring. Formel beskyttelse er mulig med differential privacy, som i Googles Urania, med lidt lavere kvalitet.<sup><a href="#kilde-10">10</a></sup>`],
+  ["Kura har færre beskyttelseslag end Clio",
+   `Clio har fire lag: anonyme resuméer, minimumsstørrelse for klynger, privatlivsbevidst navngivning og automatisk audit.<sup><a href="#kilde-1">1</a></sup> Kura har som standard kun det første.`,
+   `Vi tilføjer de tre andre lag, før vi kører på rigtige data.`],
+  ["Sprogmodeller kan tage fejl",
+   `Resuméer og klyngenavne kan være upræcise, og k-means giver lidt forskellige resultater fra kørsel til kørsel.`,
+   `Test på syntetiske data med kendte kategorier, lav stikprøvekontrol, sæt et fast random seed, og sammenlign flere kørsler.`],
+  ["Dansk sprog",
+   `Kuras standardprompter er på engelsk, og den lokale standardmodel til embeddings er trænet på engelsk.`,
+   `Oversæt og tilpas prompterne, og vælg en flersproget embedding-model.`],
+  ["Små enheder kan genkendes på institutionskortene",
+   `Ledelsen på en institution kender sine medarbejdere. En lille klynge eller et konkret resumé kan derfor pege på en bestemt medarbejder eller sag, og små institutioner har få samtaler at vise.`,
+   `Mindst 25 samtaler fra mindst 5 forskellige medarbejdere pr. klynge på hvert institutionskort, ingen eksempler på resuméer og et kvartalskort til små institutioner.`],
+  ["Kortet viser emner, ikke effekt",
+   `Klyngerne beskriver, hvad samtaler handler om. De siger ikke, om svarene var gode, eller om arbejdet blev bedre. Facetter som frustration er sprogmodellens egne vurderinger.`,
+   `Brug kortet til at stille de rigtige spørgsmål, og følg op med målinger og brugerinddragelse.`]
+];
+$("#cav").innerHTML = CAV.map(([t,r,f])=>`<div class="cav-row"><div class="cav-risk"><h3>${ICON_WARN}<span>${t}</span></h3><p>${r}</p></div><div class="cav-fix"><b>Det gør vi ved det</b><p>${f}</p></div></div>`).join("");
+
+/* ---------- demo data (fiktiv) ---------- */
+const TREE = { id:"root", short:"Alle samtaler", name:"Alle samtaler i oktober 2026",
+ desc:"Fiktive tal: 100.000 samtaler fra 130 institutioner i oktober 2026, fordelt på fem temaer. Klik på et tema for at zoome ind.",
+ insight:"Borgerkommunikation er det største tema, men Sagsbehandling har klart den højeste andel samtaler med personoplysninger. Den slags mønstre skal kortet gøre synlige.",
+ children:[
+ { id:"t1", short:"Borgerkommunikation", name:"Skriv og forbedr kommunikation til borgere og virksomheder", pos:[216,162],
+   desc:"Brugerne fik hjælp til at skrive, omskrive og oversætte tekster til borgere og virksomheder. Det spændte fra afgørelsesbreve og klagesvar til nyheder og tekster på selvbetjeningssider.",
+   insight:"Bruges af alle 130 institutioner. Mulig handling: fælles skabeloner for afgørelser og borgerbreve i klart sprog.",
+   children:[
+   { id:"m11", short:"Breve og afgørelser", name:"Skriv og forbedr breve og afgørelser til borgere",
+     desc:"Brugerne fik afgørelser, partshøringer og andre breve omskrevet, så de blev lettere at forstå. En del bad også om oversættelser til andre sprog.",
+     children:[
+     { id:"b1", short:"Klart sprog", name:"Omskriv afgørelsesbreve til borgere i klart sprog", n:6100, inst:126, f:{frust:1.8,err:22,pii:38,con:2},
+       desc:"Brugerne fik afslag og andre afgørelser omskrevet til et enklere og venligere sprog. Flere bad om, at lovhenvisninger og klagevejledning blev bevaret.",
+       insight:"Det største enkeltbehov i borgerkommunikationen, og her ligger eksemplet fra pipelinen. Mulig handling: en fælles skabelon for afgørelser i klart sprog.",
+       ex:["Brugeren fik et afslag på enkeltydelse omskrevet til klart sprog og bad om, at klagevejledningen blev bevaret.","Brugeren bad om en kortere og venligere version af en afgørelse om ophør af ydelse."]},
+     { id:"b2", short:"Partshøringer", name:"Formulér partshøringer og anmodninger om oplysninger", n:4500, inst:117, f:{frust:1.7,err:18,pii:31,con:1},
+       desc:"Brugerne fik hjælp til at formulere partshøringer og breve, der beder borgere om manglende oplysninger. Mange ønskede faste skabeloner.",
+       ex:["Brugeren fik hjælp til at formulere en partshøring om oplysninger fra en arbejdsgiver.","Brugeren bad om en skabelon til at bede en borger om manglende dokumentation."]},
+     { id:"b3", short:"Oversættelse", name:"Oversæt breve og vejledninger til andre sprog", n:3600, inst:98, f:{frust:1.9,err:26,pii:24,con:1},
+       desc:"Brugerne fik oversat breve og vejledninger til bl.a. engelsk, ukrainsk og arabisk. Nogle bad samtidig om en forenklet dansk udgave.",
+       insight:"Mulig handling: afklar, hvordan oversatte breve kvalitetssikres, før de sendes.",
+       ex:["Brugeren fik en vejledning om boligstøtte oversat til ukrainsk og bad om en forenklet dansk version.","Brugeren bad om en engelsk oversættelse af en indkaldelse til samtale i jobcentret."]}
+     ]},
+   { id:"m12", short:"Henvendelser og klager", name:"Besvar henvendelser og klager fra borgere",
+     desc:"Brugerne skrev svar på mails, spørgsmål og klager fra borgere. De bad ofte om en venlig tone og et klart svar på, hvad der skulle ske videre.",
+     children:[
+     { id:"b4", short:"Svar på mails", name:"Skriv svar på mails og spørgsmål fra borgere", n:5200, inst:121, f:{frust:1.6,err:15,pii:44,con:1},
+       desc:"Brugerne skrev svar på borgeres mails om status, ventetid og ansøgninger. De bad typisk om en høflig og kort formulering.",
+       ex:["Brugeren fik hjælp til at svare høfligt på en borgers spørgsmål om ventetid på en sag.","Brugeren bad om et standardsvar til borgere, der spørger om status på deres ansøgning."]},
+     { id:"b5", short:"Svar på klager", name:"Strukturér svar på klager over sagsbehandlingen", n:3600, inst:104, f:{frust:2.1,err:24,pii:36,con:3},
+       desc:"Brugerne fik struktureret svar på klager over sagsbehandlingstid og forløb. Mange ønskede at anerkende borgerens oplevelse og forklare det videre forløb.",
+       ex:["Brugeren fik struktureret et svar på en klage over lang sagsbehandlingstid.","Brugeren bad om et svar, der anerkender borgerens oplevelse og forklarer det videre forløb."]}
+     ]},
+   { id:"m13", short:"Web og SoMe", name:"Producér indhold til hjemmeside og sociale medier",
+     desc:"Brugerne skrev nyheder, opslag og vejledende tekster til kommunens kanaler. Fokus var på kort og letlæseligt sprog.",
+     children:[
+     { id:"b6", short:"Nyheder og opslag", name:"Skriv nyheder og opslag om kommunale tilbud", n:3300, inst:92, f:{frust:1.5,err:12,pii:3,con:0},
+       desc:"Brugerne skrev nyheder og opslag om åbningstider, arrangementer og nye tilbud. De bad ofte om flere varianter at vælge imellem.",
+       ex:["Brugeren fik skrevet et nyhedsopslag om nye åbningstider i borgerservice.","Brugeren bad om tre varianter af et opslag om en informationsaften for nye borgere."]},
+     { id:"b7", short:"Selvbetjening", name:"Forenkl tekster på selvbetjeningssider", n:2300, inst:85, f:{frust:1.6,err:14,pii:2,con:0},
+       desc:"Brugerne fik forenklet tekster på selvbetjeningssider om fx parkering og flytning. Målet var tekster, der kan forstås uden hjælp.",
+       ex:["Brugeren fik forenklet en tekst om ansøgning om parkeringstilladelse.","Brugeren bad om at gøre en vejledning om flytning af folkeregisteradresse lettere at læse."]}
+     ]}
+   ]},
+ { id:"t2", short:"Jura og regler", name:"Fortolk og anvend lovgivning i sagsbehandlingen", pos:[416,268],
+   desc:"Brugerne bad om forklaringer af regler og vejledninger og om hjælp til at kvalitetssikre afgørelser og notater. Mange spørgsmål handlede om konkrete paragraffer og nylige lovændringer.",
+   insight:"Højeste fejlrate blandt temaerne. Mulig handling: giv assistenten adgang til opdaterede retskilder, og lær brugerne at tjekke paragraffer.",
+   children:[
+   { id:"m21", short:"Fortolkning af regler", name:"Forklar og fortolk regler og vejledninger",
+     desc:"Brugerne bad om forklaringer af bestemmelser og om forskelle mellem gamle og nye regler. Svarene manglede ofte de nyeste ændringer.",
+     insight:"Svarene halter, når reglerne er ændret for nylig.",
+     children:[
+     { id:"b8", short:"Forklar regler", name:"Forklar bestemmelser i social- og beskæftigelseslovgivningen", n:6900, inst:118, f:{frust:2.4,err:31,pii:9,con:2},
+       desc:"Brugerne bad om forklaringer af konkrete bestemmelser og eksempler på, hvordan de bruges. Svarene henviste i nogle tilfælde til forkerte paragraffer.",
+       insight:"Mulig handling: kræv kildehenvisninger i svarene, og tjek paragraffer mod Retsinformation.",
+       ex:["Brugeren bad om en forklaring af reglerne for dækning af merudgifter og fik flere paragrafhenvisninger.","Brugeren spurgte, hvornår en ydelse kan kræves tilbage, og bad om eksempler."]},
+     { id:"b9", short:"Lovændringer", name:"Sammenlign regler før og efter en lovændring", n:4900, inst:106, f:{frust:2.7,err:38,pii:4,con:1},
+       desc:"Brugerne bad om at få forskellen mellem gamle og nye regler forklaret efter lovændringer. Svarene byggede ofte på regler, der ikke længere gjaldt.",
+       insight:"Fejlraten er højest her, fordi modellen ikke kender de nyeste regler. Mulig handling: opslag i opdaterede kilder (RAG) eller tydelig besked om, hvor gammel modellens viden er.",
+       ex:["Brugeren bad om forskellene mellem gamle og nye regler på et ydelsesområde og påpegede, at svaret var forældet.","Brugeren bad om en oversigt over ændringer i en bekendtgørelse og fik et svar uden de seneste ændringer."]}
+     ]},
+   { id:"m22", short:"Kvalitetssikring", name:"Kvalitetssikr afgørelser og journalnotater",
+     desc:"Brugerne fik tjekket afgørelser for formkrav og omsat stikord til journalnotater. Mange bad om en mere neutral og objektiv formulering.",
+     children:[
+     { id:"b10", short:"Tjek af afgørelser", name:"Tjek om en afgørelse opfylder formkravene", n:5400, inst:109, f:{frust:1.9,err:19,pii:29,con:2},
+       desc:"Brugerne fik tjekket udkast til afgørelser for begrundelse, lovhenvisning og klagevejledning. Flere bad om en fast tjekliste.",
+       ex:["Brugeren fik tjekket, om et udkast til afgørelse indeholdt begrundelse, lovhenvisning og klagevejledning.","Brugeren bad om en tjekliste over krav til en skriftlig afgørelse."]},
+     { id:"b11", short:"Journalnotater", name:"Skriv journalnotater ud fra stikord", n:4200, inst:101, f:{frust:1.7,err:16,pii:52,con:3},
+       desc:"Brugerne fik omdannet stikord fra samtaler med borgere til journalnotater. Mange bad om en mere neutral formulering.",
+       ex:["Brugeren fik omdannet stikord fra en borgersamtale til et journalnotat.","Brugeren bad om at gøre et journalnotat mere neutralt og objektivt formuleret."]}
+     ]}
+   ]},
+ { id:"t3", short:"Data og analyse", name:"Analysér data og udarbejd rapporter", pos:[632,154],
+   desc:"Brugerne arbejdede med regneark, formler og kode og bad om hjælp til at gøre tal til analyser og ledelsesrapporter. En stor del handlede om Excel.",
+   insight:"Excel fylder mest. Mulig handling: et kort kursus og færdige skabeloner til typiske opgørelser.",
+   children:[
+   { id:"m31", short:"Excel", name:"Byg og ret regneark og formler i Excel",
+     desc:"Brugerne fik skrevet og rettet formler, pivottabeller og datarensning i regneark. Typiske problemer var opslagsformler og uens datoformater.",
+     children:[
+     { id:"b12", short:"Formler", name:"Skriv og ret formler og pivottabeller", n:6400, inst:122, f:{frust:2.2,err:27,pii:1,con:0},
+       desc:"Brugerne fik skrevet og rettet opslagsformler og pivottabeller. Typiske opgaver var opgørelser pr. måned og afdeling.",
+       insight:"Mulig handling: et bibliotek af færdige formler og pivottabeller til typiske opgørelser.",
+       ex:["Brugeren fik rettet en XOPSLAG-formel, der returnerede fejl.","Brugeren bad om en pivottabel, der opgør sager pr. måned og afdeling."]},
+     { id:"b13", short:"Rens data", name:"Rens og omstrukturér regneark", n:4100, inst:108, f:{frust:2.0,err:21,pii:12,con:1},
+       desc:"Brugerne fik hjælp til at fjerne dubletter, ensrette datoer og opdele kolonner. Regnearkene kom ofte fra fagsystemer.",
+       ex:["Brugeren fik hjælp til at fjerne dubletter og ensrette datoformater i et regneark.","Brugeren bad om at opdele en kolonne med adresser i flere kolonner."]}
+     ]},
+   { id:"m32", short:"Analyser og rapporter", name:"Skriv analyser og ledelsesrapporter",
+     desc:"Brugerne fik opsummeret nøgletal til ledelsen og skrevet kode til statistiske analyser. En del bad om hjælp til at forklare udviklingen i tallene.",
+     children:[
+     { id:"b14", short:"Nøgletal", name:"Opsummér nøgletal til ledelsen", n:4700, inst:112, f:{frust:1.6,err:14,pii:2,con:0},
+       desc:"Brugerne fik opsummeret kvartalstal til korte ledelsesnotater. Flere bad om forklaringer på udviklingen i sagsantal.",
+       ex:["Brugeren fik opsummeret kvartalets nøgletal til et ledelsesnotat på én side.","Brugeren bad om forslag til, hvordan en stigning i sagsantal kunne forklares for direktionen."]},
+     { id:"b15", short:"Python og R", name:"Skriv Python- eller R-kode til statistik", n:3800, inst:52, f:{frust:2.3,err:29,pii:1,con:0},
+       desc:"Brugerne fik skrevet og fejlrettet Python- og R-kode til statistik. Opgaverne kom fra et mindre antal analyseenheder.",
+       ex:["Brugeren fik skrevet et Python-script, der beregner gennemsnitlig sagsbehandlingstid.","Brugeren bad om hjælp til en fejl i R-kode til en regressionsanalyse."]}
+     ]}
+   ]},
+ { id:"t4", short:"Møder og HR", name:"Planlæg møder og håndtér HR-opgaver", pos:[608,390],
+   desc:"Brugerne forberedte møder, skrev referater og løste HR-opgaver som stillingsopslag og spørgsmål om ferie og overenskomst. Opgaverne var typisk korte og gentagne.",
+   insight:"Lav frustration og få fejl: her virker assistenten allerede godt. Undtagelsen er spørgsmål om ferie- og overenskomstregler.",
+   children:[
+   { id:"m41", short:"Møder og referater", name:"Forbered møder og skriv referater",
+     desc:"Brugerne lavede dagsordener og omskrev mødenoter til referater med beslutninger og opfølgningspunkter. Opgaverne kom fra næsten alle institutioner.",
+     children:[
+     { id:"b16", short:"Dagsordener", name:"Lav dagsordener og mødeforberedelse", n:4100, inst:124, f:{frust:1.4,err:9,pii:4,con:0},
+       desc:"Brugerne lavede dagsordener og mødeforberedelse til afdelings- og udvalgsmøder. Opgaverne var korte og standardprægede.",
+       ex:["Brugeren fik udarbejdet en dagsorden for et afdelingsmøde om en ny it-løsning.","Brugeren bad om forslag til forberedelse af et møde i samarbejdsudvalget."]},
+     { id:"b17", short:"Referater", name:"Omskriv mødenoter til referater", n:5700, inst:127, f:{frust:1.6,err:13,pii:17,con:1},
+       desc:"Brugerne omskrev mødenoter til referater med beslutninger og opfølgningspunkter. Nogle noter indeholdt navne på deltagere.",
+       ex:["Brugeren fik omskrevet mødenoter til et referat med beslutninger og opfølgningspunkter.","Brugeren bad om et kortere referat til intranettet."]}
+     ]},
+   { id:"m42", short:"HR og rekruttering", name:"Skriv stillingsopslag og forklar personaleregler",
+     desc:"Brugerne skrev stillingsopslag og interviewspørgsmål og spurgte til ferie- og overenskomstregler. Svarene om personaleregler var oftere fejlbehæftede end resten.",
+     children:[
+     { id:"b18", short:"Stillingsopslag", name:"Skriv stillingsopslag og interviewspørgsmål", n:4600, inst:113, f:{frust:1.4,err:10,pii:2,con:0},
+       desc:"Brugerne skrev stillingsopslag og interviewspørgsmål til faglige stillinger. De bad ofte om et inkluderende sprog.",
+       ex:["Brugeren fik skrevet et stillingsopslag til en stilling som socialrådgiver.","Brugeren bad om interviewspørgsmål til en stilling som HR-konsulent."]},
+     { id:"b19", short:"Ferieregler", name:"Forklar ferie- og overenskomstregler", n:3400, inst:109, f:{frust:2.5,err:34,pii:6,con:1},
+       desc:"Brugerne spurgte til regler for ferie, seniordage og overenskomster. Svarene byggede i flere tilfælde på regler, der ikke længere gjaldt.",
+       insight:"Mulig handling: læg de gældende personaleregler ind som kilde, så svarene bygger på dem.",
+       ex:["Brugeren spurgte til reglerne for overførsel af feriedage og fik et svar, der byggede på de gamle ferieregler.","Brugeren bad om en forklaring af reglerne for seniordage i en overenskomst."]}
+     ]}
+   ]},
+ { id:"t5", short:"Sagsbehandling", name:"Opsummér og vurdér konkrete borgersager", pos:[310,420],
+   desc:"Brugerne indsatte sagsakter og journaler for at få resuméer, tidslinjer og vurderinger i konkrete sager. Samtalerne indeholdt ofte personoplysninger, og en del bad om hjælp tæt på selve afgørelsen.",
+   insight:"Højeste andel med personoplysninger og den højeste bekymringsscore. Mulig handling: en klar retningslinje for brug af sagsakter i StatGPT, før brugen vokser.",
+   children:[
+   { id:"m51", short:"Resuméer af sager", name:"Opsummér sagsakter og journaler",
+     desc:"Brugerne indsatte lange sagsakter og journaler for at få resuméer og tidslinjer. Størstedelen af samtalerne indeholdt personoplysninger.",
+     children:[
+     { id:"b20", short:"Resuméer", name:"Lav resuméer af lange sagsakter", n:4700, inst:84, f:{frust:1.9,err:20,pii:64,con:6},
+       desc:"Brugerne indsatte lange sagsakter og bad om resuméer af borgerens forløb. Samtalerne indeholdt ofte helbredsoplysninger.",
+       insight:"64 % af samtalerne indeholder personoplysninger. Mulig handling: en klar retningslinje for, hvilke oplysninger der må indsættes.",
+       ex:["Brugeren indsatte en lang sagsakt og bad om et resumé af borgerens forløb.","Brugeren fik lavet et resumé af lægeoplysninger til brug i et rehabiliteringsteam."]},
+     { id:"b21", short:"Tidslinjer", name:"Udtræk tidslinjer og nøglefakta fra journaler", n:3500, inst:76, f:{frust:2.0,err:23,pii:58,con:5},
+       desc:"Brugerne fik udtrukket tidslinjer og nøglefakta fra journalnotater. Resultatet blev brugt som overblik før møder.",
+       ex:["Brugeren bad om en tidslinje over kontakter og afgørelser i en sag.","Brugeren fik udtrukket nøglefakta fra flere journalnotater til et samlet overblik."]}
+     ]},
+   { id:"m52", short:"Vurderinger i sager", name:"Bed om vurderinger i konkrete sager",
+     desc:"Brugerne bad assistenten vurdere, om ansøgninger burde bevilges, og om dokumentationen var tilstrækkelig. Samtalerne lå tæt på myndighedsudøvelse.",
+     insight:"Assistenten bruges tæt på myndighedsudøvelse.",
+     children:[
+     { id:"b22", short:"Bevilling?", name:"Bed om en anbefaling til, om en ansøgning bør bevilges", n:3000, inst:63, f:{frust:2.2,err:25,pii:47,con:18},
+       desc:"Brugerne bad assistenten vurdere, om en konkret ansøgning burde bevilges. Det lå tæt på selve afgørelsen, som en sagsbehandler skal træffe.",
+       insight:"Mulig handling: en retningslinje om, at afgørelser altid træffes af en sagsbehandler, og at StatGPT kun er støtte.",
+       ex:["Brugeren bad assistenten vurdere, om en ansøgning om enkeltydelse burde bevilges.","Brugeren spurgte, hvilken afgørelse der var mest korrekt i en konkret sag om hjemmehjælp."]},
+     { id:"b23", short:"Dokumentation", name:"Vurdér om dokumentationen i en sag er tilstrækkelig", n:2000, inst:57, f:{frust:2.1,err:22,pii:41,con:9},
+       desc:"Brugerne bad om vurderinger af, om dokumentationen i en sag var tilstrækkelig. De fik ofte lister over manglende oplysninger.",
+       ex:["Brugeren bad om en vurdering af, om lægeerklæringen i en sag var tilstrækkelig dokumentation.","Brugeren fik en liste over manglende oplysninger i en ansøgning om boligindretning."]}
+     ]}
+   ]}
+ ]};
+
+const NODES = {};
+(function agg(node, parent, depth){
+  node.parent = parent; node.depth = depth; NODES[node.id] = node;
+  if(node.children){
+    node.children.forEach(c=>agg(c,node,depth+1));
+    node.n = node.children.reduce((a,c)=>a+c.n,0);
+    node.f = {};
+    ["frust","err","pii","con"].forEach(k=>{ node.f[k] = node.children.reduce((a,c)=>a+c.n*c.f[k],0)/node.n; });
+  }
+})(TREE, null, 0);
+const TOTAL = TREE.n;
+
+/* ---------- fiktive institutioner ----------
+   Hver basisklynges samtaler fordeles på de 130 institutioner, så institutionernes tal summer
+   præcis til tallene på fælleskortet. inst på basisklyngerne ovenfor er antallet af institutioner
+   med samtaler i klyngen; alle andre institutionstal beregnes herunder. Alt er opdigtet. */
+const N_INST = 130, MIN_N = 25, FK = ["frust","err","pii","con"], EX_INST = 47;
+const LEAVES = Object.values(NODES).filter(n=>!n.children);
+function gaussFrom(rng){ let u=0,v=0; while(!u)u=rng(); while(!v)v=rng(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
+function themeOf(nd){ let x=nd; while(x.parent && x.parent!==TREE) x=x.parent; return x; }
+const INST = (function(){
+  const rng = mulberry32(4711), g = ()=>gaussFrom(rng);
+  // størrelser: få store og mange små institutioner; Institution 047 (eksemplet i pipelinen) er blandt de store
+  const order = [...Array(N_INST).keys()];
+  for(let i=order.length-1;i>0;i--){ const j=Math.floor(rng()*(i+1)); [order[i],order[j]]=[order[j],order[i]]; }
+  const p = order.indexOf(EX_INST-1); [order[p],order[1]] = [order[1],order[p]];
+  const list = [];
+  order.forEach((ix,rank)=>{ list[ix] = { id:ix+1, label:"Institution "+String(ix+1).padStart(3,"0"), w:Math.pow(rank+1,-0.7), aff:{}, prof:{} }; });
+  // hver institution har sin egen profil: hvilke temaer den bruger mest, og hvor høje facetterne er
+  list.forEach(I=>{ TREE.children.forEach(t=>{ I.aff[t.id]=Math.exp(0.45*g()); }); FK.forEach(k=>{ I.prof[k]=Math.exp(0.2*g()); }); });
+  // ikke alle institutioner har konkrete borgersager
+  list.forEach(I=>{ if(I.id!==EX_INST && rng()<0.28) I.aff.t5 = 0; });
+  list[EX_INST-1].aff.t5 *= 1.6; list[EX_INST-1].prof.pii *= 1.15;
+  return list;
+})();
+(function assign(){
+  const rng = mulberry32(90210), g = ()=>gaussFrom(rng);
+  // alle 130 institutioner får mindst én basisklynge
+  const home = INST.map(I=>{
+    if(I.id===EX_INST) return NODES.b1;
+    const ws = LEAVES.map(L=>L.n*I.aff[themeOf(L).id]);
+    let r = rng()*ws.reduce((a,b)=>a+b,0), j = 0;
+    while(j<ws.length-1 && r>ws[j]){ r-=ws[j]; j++; }
+    return LEAVES[j];
+  });
+  LEAVES.forEach(L=>{
+    const T = themeOf(L).id;
+    const wt = INST.map(I=>I.w*I.aff[T]);
+    const forced = INST.map((_,i)=>i).filter(i=>home[i]===L);
+    const rest = INST.map((_,i)=>i).filter(i=>home[i]!==L)
+      .map(i=>({i, k:Math.pow(rng(),1/wt[i])})).sort((a,b)=>b.k-a.k)
+      .slice(0, Math.max(0, L.inst-forced.length)).map(o=>o.i);
+    const sel = forced.concat(rest);
+    // én samtale til hver valgt institution, resten efter størrelse (største rest-metoden)
+    const R = L.n - sel.length, sw = sel.reduce((a,i)=>a+wt[i],0);
+    const raw = sel.map(i=>R*wt[i]/sw), base = raw.map(Math.floor);
+    const left = R - base.reduce((a,b)=>a+b,0);
+    raw.map((v,j)=>({j, f:v-base[j]})).sort((a,b)=>b.f-a.f).slice(0,left).forEach(o=>{ base[o.j]++; });
+    L.cnt = new Array(N_INST).fill(0);
+    sel.forEach((i,j)=>{ L.cnt[i] = 1+base[j]; });
+    // facetter pr. institution: klyngens niveau × institutionens profil × støj, skaleret så gennemsnittet passer
+    L.fi = {};
+    FK.forEach(k=>{
+      const off = k==="frust" ? 1 : 0, cap = k==="frust" ? 5 : 100, b = L.f[k]-off;
+      let v = sel.map(i=>b*INST[i].prof[k]*Math.exp(0.15*g()));
+      for(let it=0; it<6; it++){
+        const m = sel.reduce((a,i,j)=>a+L.cnt[i]*v[j],0)/L.n;
+        v = v.map(x=> m>0 ? Math.min(cap-off, x*b/m) : 0);
+      }
+      L.fi[k] = new Array(N_INST).fill(0);
+      sel.forEach((i,j)=>{ L.fi[k][i] = off+v[j]; });
+    });
+  });
+})();
+(function aggInst(nd){
+  nd.fs = {};
+  if(nd.children){
+    nd.children.forEach(aggInst);
+    nd.cnt = new Array(N_INST).fill(0);
+    FK.forEach(k=>{ nd.fs[k] = new Array(N_INST).fill(0); });
+    nd.children.forEach(c=>{ for(let i=0;i<N_INST;i++){ nd.cnt[i]+=c.cnt[i]; FK.forEach(k=>{ nd.fs[k][i]+=c.fs[k][i]; }); } });
+  } else {
+    FK.forEach(k=>{ nd.fs[k] = nd.cnt.map((c,i)=>c*nd.fi[k][i]); });
+  }
+  nd.inst = nd.cnt.filter(c=>c>0).length;
+})(TREE);
+INST.forEach((I,i)=>{ I.n = TREE.cnt[i]; });
+
+const FACETS = {
+  none:{label:"Ingen"},
+  err:{label:"Assistentfejl", domain:[0,40], fmt:v=>pct(v), long:"Andel samtaler med mindst én fejl fra assistenten"},
+  pii:{label:"Personoplysninger", domain:[0,70], fmt:v=>pct(v), long:"Andel samtaler, hvor brugeren indsatte personoplysninger"},
+  frust:{label:"Frustration", domain:[1,3], fmt:v=>nf1.format(v)+" / 5", long:"Gennemsnitlig frustration (1–5)"}
+};
+const RAMP = ["#F1F5F2","#D9E7DF","#B5D1C1","#8DB8A0","#62A07F","#35865E","#066B43"];
+function hex2rgb(h){h=h.replace("#","");return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+function rampColor(t){
+  const R = RAMP; t=Math.max(0,Math.min(1,t));
+  const x = t*(R.length-1), i=Math.min(R.length-2,Math.floor(x)), f=x-i;
+  const a=hex2rgb(R[i]), b=hex2rgb(R[i+1]);
+  const c=a.map((v,j)=>Math.round(v+(b[j]-v)*f));
+  return {css:`rgb(${c[0]},${c[1]},${c[2]})`, lum:(0.2126*c[0]+0.7152*c[1]+0.0722*c[2])/255};
+}
+
+const THRESH = { err:30, pii:40, con:10, frust:2.4 };
+
+let selected = TREE;
+let facet = "none";
+let instSel = 0;   // 0 = fælleskortet for alle 130, ellers institutionens nummer
+const mapEl = $("#map"), panelEl = $("#cl-panel"), tipEl = $("#tooltip"), cardEl = $("#map-card"), instSelEl = $("#inst-sel");
+
+// Tal for den valgte visning: fælleskortet eller ét institutionskort
+function vN(nd){ return instSel ? nd.cnt[instSel-1] : nd.n; }
+function vF(nd,k){ if(!instSel) return nd.f[k]; const c = nd.cnt[instSel-1]; return c ? nd.fs[k][instSel-1]/c : 0; }
+// Privatlivsregel: klynger med under MIN_N samtaler i visningen vises ikke
+function visible(nd){ return nd===TREE || vN(nd) >= MIN_N; }
+function shortOf(nd){ return nd===TREE && instSel ? INST[instSel-1].label : nd.short; }
+const pct1 = v => nf1.format(v) + " %";
+
+function viewNode(){ return selected.children ? selected : selected.parent; }
+
+function layout(view){
+  if(view===TREE){
+    // bobleareal i forhold til visningens samlede antal, så et institutionskort fylder lige så meget som fælleskortet
+    const pts = view.children.filter(visible).map(c=>({node:c, x:c.pos[0], y:c.pos[1], r:1.85*Math.sqrt(vN(c)/Math.max(1,vN(TREE))*10000)}));
+    for(let it=0; it<300; it++){
+      let moved = false;
+      for(let i=0;i<pts.length;i++) for(let j=i+1;j<pts.length;j++){
+        const a=pts[i], b=pts[j]; let dx=b.x-a.x, dy=b.y-a.y, dist=Math.hypot(dx,dy)||0.01; const min=a.r+b.r+14;
+        if(dist<min){ const p=(min-dist)/2; dx/=dist; dy/=dist; a.x-=dx*p; a.y-=dy*p; b.x+=dx*p; b.y+=dy*p; moved=true; }
+      }
+      pts.forEach(p=>{ p.x=Math.min(800-8-p.r, Math.max(8+p.r, p.x)); p.y=Math.min(520-8-p.r, Math.max(8+p.r, p.y)); });
+      if(!moved) break;
+    }
+    return pts;
+  }
+  const cx=400, cy=272, R=226, gap=14, kids=view.children.filter(visible), n=kids.length;
+  const ang = n===2 ? [Math.PI,0] : n===3 ? [-5*Math.PI/6,-Math.PI/6,Math.PI/2] : kids.map((_,i)=>-Math.PI/2+i*2*Math.PI/n);
+  const d = n===1 ? 0 : R*0.42;
+  const pts = kids.map((k,i)=>({node:k, x:cx+d*Math.cos(ang[i]), y:cy+d*Math.sin(ang[i]), r:R*0.56*Math.sqrt(vN(k)/Math.max(1,vN(view)))}));
+  for(let it=0; it<400; it++){
+    for(let i=0;i<pts.length;i++) for(let j=i+1;j<pts.length;j++){
+      const a=pts[i], b=pts[j]; let dx=b.x-a.x, dy=b.y-a.y, dist=Math.hypot(dx,dy)||0.01; const min=a.r+b.r+gap;
+      if(dist<min){ const p=(min-dist)/2; dx/=dist; dy/=dist; a.x-=dx*p; a.y-=dy*p; b.x+=dx*p; b.y+=dy*p; }
+    }
+    pts.forEach(p=>{ const dx=p.x-cx, dy=p.y-cy, dist=Math.hypot(dx,dy), max=R-10-p.r; if(dist>max && dist>0){ p.x=cx+dx/dist*max; p.y=cy+dy/dist*max; } });
+  }
+  return pts;
+}
+
+function labelLines(text, rUnits, unitsPerPx){
+  const rPx = rUnits/unitsPerPx;
+  const chord = 2*rPx*0.86;
+  const words = text.split(" ");
+  for(const fs of [13,12,11]){
+    const w = s => s.length*fs*0.56;
+    if(w(text)<=chord) return {fs, lines:[text]};
+    if(words.length>1){
+      let best=null;
+      for(let k=1;k<words.length;k++){ const l1=words.slice(0,k).join(" "), l2=words.slice(k).join(" "); const m=Math.max(w(l1),w(l2)); if(!best||m<best.m) best={m,lines:[l1,l2]}; }
+      if(best.m<=chord*0.94 && rPx>=26) return {fs, lines:best.lines};
+    }
+  }
+  return {fs:11, lines:[]};
+}
+
+function renderMap(){
+  const view = viewNode();
+  const pts = layout(view);
+  const upp = 800/Math.max(1, mapEl.getBoundingClientRect().width || 800);
+  let html = "";
+  if(view!==TREE){
+    html += `<circle class="parent-ring" cx="400" cy="272" r="226"></circle>`;
+    html += `<text class="ring-label" x="400" y="${272-226-12}" text-anchor="middle" style="font-size:${(13*upp).toFixed(1)}px">${view.short} · ${fmt(vN(view))} samtaler</text>`;
+  }
+  if(!pts.length){
+    const msg = view===TREE ? "Alle temaer har under "+MIN_N+" samtaler fra institutionen" : "Alle underklynger har under "+MIN_N+" samtaler fra institutionen";
+    html += `<text class="ring-label" x="400" y="272" text-anchor="middle" style="font-size:${(14*upp).toFixed(1)}px">${msg}</text>`;
+  }
+  pts.forEach(p=>{
+    const nd = p.node;
+    let fill = "var(--bubble)", textInk = "var(--ink)", subInk = "var(--ink-2)", halo = "var(--bubble)";
+    if(facet!=="none"){
+      const F=FACETS[facet]; const t=(vF(nd,facet)-F.domain[0])/(F.domain[1]-F.domain[0]);
+      const c=rampColor(t); fill=c.css; halo=c.css;
+      if(c.lum<0.5){ textInk="#FFFFFF"; subInk="#FFFFFF"; } else { textInk="#343536"; subInk="#343536"; }
+    }
+    const rng = mulberry32(hashStr(nd.id));
+    const nd_dots = Math.round(vN(nd)/100);
+    let dots = "";
+    for(let i=0;i<nd_dots;i++){ const a=rng()*Math.PI*2, rr=Math.sqrt(rng())*p.r*0.86; dots += `<circle cx="${(p.x+Math.cos(a)*rr).toFixed(1)}" cy="${(p.y+Math.sin(a)*rr).toFixed(1)}" r="${(1.25*upp).toFixed(2)}"></circle>`; }
+    const lab = labelLines(nd.short, p.r, upp);
+    const fsL = lab.fs*upp, fsC = Math.max(11, lab.fs-1)*upp;
+    const lh = fsL*1.15;
+    const nLines = lab.lines.length;
+    const totalH = nLines*lh + fsC*1.1;
+    let y0 = p.y - totalH/2 + fsL*0.8;
+    let texts = "";
+    lab.lines.forEach((l,i)=>{ texts += `<text x="${p.x.toFixed(1)}" y="${(y0+i*lh).toFixed(1)}" text-anchor="middle" style="font-size:${fsL.toFixed(1)}px;font-weight:700;fill:${textInk};stroke:${halo};stroke-width:${(3*upp).toFixed(1)}px">${l}</text>`; });
+    const cy = nLines ? y0 + nLines*lh - lh + fsC*1.25 : p.y + fsC*0.35;
+    const cnt = facet==="none" ? fmt(vN(nd)) : `${fmt(vN(nd))} · ${FACETS[facet].fmt(vF(nd,facet))}`;
+    texts += `<text x="${p.x.toFixed(1)}" y="${cy.toFixed(1)}" text-anchor="middle" style="font-size:${fsC.toFixed(1)}px;font-weight:500;fill:${subInk};stroke:${halo};stroke-width:${(3*upp).toFixed(1)}px">${cnt}</text>`;
+    const isSel = nd===selected;
+    const lvlName = nd.children ? "zoom ind" : "vis detaljer";
+    html += `<g class="bubble${isSel?" sel":""}" data-id="${nd.id}" tabindex="0" role="button" aria-label="${nd.name}, ${fmt(vN(nd))} samtaler. Tryk for at ${lvlName}.">
+      <circle class="b" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${p.r.toFixed(1)}" style="fill:${fill}"></circle>
+      <g class="dots">${dots}</g>
+      <circle class="ring" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${(p.r+3).toFixed(1)}"></circle>
+      ${texts}
+    </g>`;
+  });
+  mapEl.innerHTML = html;
+  const whose = instSel ? `Institutionskort for ${INST[instSel-1].label}` : "Fælleskort for alle 130 institutioner";
+  mapEl.setAttribute("aria-label", view===TREE ? `${whose}: de fem temaer` : `${whose}: underklynger i ${view.short}`);
+  $("#map-foot-txt").textContent = (instSel ? "Boblestørrelse = andel af institutionens samtaler" : "Boblestørrelse = antal samtaler") + " · hver prik ≈ 100 samtaler";
+  renderLegend();
+}
+
+function renderLegend(){
+  const el = $("#ramp-legend");
+  if(facet==="none"){ el.hidden = true; el.innerHTML=""; return; }
+  const F = FACETS[facet];
+  const stops = RAMP.join(",");
+  el.hidden = false;
+  el.innerHTML = `<span>${F.label}:</span><span>${F.fmt(F.domain[0])}</span><i style="background:linear-gradient(90deg,${stops})"></i><span>${F.fmt(F.domain[1])}</span>`;
+}
+
+function stat(label, value, sub, flag){
+  return `<div class="stat${flag?" flag":""}"><span class="l">${label}</span><span class="v">${value}</span>${sub?`<span class="s">${sub}</span>`:""}${flag?`<span class="flagtxt">${ICON_WARN}Bør undersøges</span>`:""}</div>`;
+}
+
+// Kort tekst til institutionskortet: hvor afviger institutionen mest fra alle 130?
+const CMP = {
+  err:(a,b)=>`Andelen af samtaler med assistentfejl er ${pct(a)} mod ${pct(b)} for alle 130.`,
+  pii:(a,b)=>`Andelen af samtaler med personoplysninger er ${pct(a)} mod ${pct(b)} for alle 130.`,
+  con:(a,b)=>`Andelen af samtaler med bekymringsscore på mindst 3 er ${pct(a)} mod ${pct(b)} for alle 130.`,
+  frust:(a,b)=>`Den gennemsnitlige frustration er ${nf1.format(a)} mod ${nf1.format(b)} for alle 130.`
+};
+function compareText(nd){
+  const out = [];
+  if(nd.children){
+    let best = null;
+    nd.children.filter(visible).forEach(k=>{ const a=vN(k)/vN(nd)*100, b=k.n/nd.n*100; if(!best || a-b>best.d) best={k,a,b,d:a-b}; });
+    if(best && best.d>=3) out.push(`»${best.k.short}« udgør ${pct(best.a)} af institutionens samtaler${nd===TREE?"":" her"} mod ${pct(best.b)} for alle 130.`);
+  } else {
+    out.push(`Klyngen udgør ${pct1(vN(nd)/vN(TREE)*100)} af institutionens samtaler mod ${pct1(nd.n/TOTAL*100)} for alle 130.`);
+  }
+  const hi = ["err","pii","con","frust"].map(k=>{ const a=vF(nd,k), b=nd.f[k]; return {k, a, b, ok: k==="frust" ? a-b>=0.2 : (a-b>=3 && a>=b*1.15), rel: k==="frust" ? (a-1)/Math.max(0.01,b-1) : a/Math.max(0.5,b)}; })
+    .filter(o=>o.ok).sort((x,y)=>y.rel-x.rel);
+  out.push(hi.length ? CMP[hi[0].k](hi[0].a, hi[0].b) : "Fejl, personoplysninger, bekymring og frustration ligger på niveau med alle 130 eller lavere.");
+  return out.join(" ");
+}
+
+function renderPanel(){
+  const nd = selected, I = instSel ? INST[instSel-1] : null;
+  const chain = []; for(let x=nd; x; x=x.parent) chain.unshift(x);
+  const crumbs = chain.map((x,i)=> i===chain.length-1 ? `<li><span aria-current="page">${shortOf(x)}</span></li>` : `<li><button type="button" data-go="${x.id}">${shortOf(x)}</button></li>`).join("");
+  const lvl = ["Hele kortet","Topniveau","Niveau 2","Niveau 3"][nd.depth];
+  const all = k => "alle 130: " + (k==="frust" ? nf1.format(nd.f[k]) : pct(nd.f[k]));
+  const fv = k => vF(nd,k);
+  let html = `<p class="map-of">${I ? `Institutionskort · ${I.label}` : "Fælleskort · alle 130 institutioner"}</p>
+    ${nd===TREE ? "" : `<nav class="crumbs" aria-label="Placering i træet"><ol>${crumbs}</ol></nav>`}
+    <span class="lvl-pill">${lvl}</span>
+    <h3>${nd===TREE && I ? "Alle samtaler fra " + I.label : nd.name}</h3>
+    <p class="desc">${nd===TREE && I ? "Institutionens egne samtaler i oktober 2026, fordelt på de samme fem temaer som på fælleskortet. Under hvert tal står tallet for alle 130 institutioner til sammenligning." : nd.desc}</p>
+    <div class="stats">
+      ${stat("Samtaler", fmt(vN(nd)), nd===TREE ? "oktober 2026" : (I ? "fra institutionen" : `${pct(nd.n/TOTAL*100)} af alle`), false)}
+      ${I ? (nd===TREE ? stat("Andel af alle samtaler", pct1(vN(nd)/TOTAL*100), "af 100.000 i alt", false)
+                       : stat("Andel af institutionens", pct(vN(nd)/vN(TREE)*100), "alle 130: " + pct(nd.n/TOTAL*100), false))
+          : stat("Institutioner", fmt(nd.inst), "af 130", false)}
+      ${stat("Gns. frustration", nf1.format(fv("frust"))+" / 5", I ? all("frust") : "skala 1–5", fv("frust")>=THRESH.frust)}
+      ${stat("Med assistentfejl", pct(fv("err")), I ? all("err") : "mindst én fejl", fv("err")>=THRESH.err)}
+      ${stat("Personoplysninger i prompt", pct(fv("pii")), I ? all("pii") : "eget felt (trin 2)", fv("pii")>=THRESH.pii)}
+      ${stat("Bekymringsscore ≥ 3", pct(fv("con")), I ? all("con") : "StatGPTs vurdering", fv("con")>=THRESH.con)}
+    </div>
+    <p class="stat-help"><a href="#tal">Sådan er bekymringsscore og personoplysninger regnet</a></p>`;
+  if(I) html += `<div class="insight"><b>Sammenlignet med alle 130</b>${compareText(nd)}</div>`;
+  else if(nd.insight) html += `<div class="insight"><b>${nd===TREE?"Det springer i øjnene":"Hvad kan vi bruge det til?"}</b>${nd.insight}</div>`;
+  if(nd.children){
+    const kids = nd.children.filter(visible).sort((a,b)=>vN(b)-vN(a)), hid = nd.children.length - kids.length;
+    html += `<h4 class="kids-h">Underklynger (${kids.length})</h4>`;
+    if(I && kids.length) html += `<p class="kids-key"><span class="key-bar" aria-hidden="true"></span>andel af institutionens samtaler<span class="key-tick" aria-hidden="true"></span>alle 130</p>`;
+    html += `<ul class="kids">${kids.map(k=>{
+      const sh = vN(k)/vN(nd)*100, shAll = k.n/nd.n*100;
+      return `<li><button type="button" class="kid-btn" data-go="${k.id}"><span class="kid-name">${k.name}</span><span class="kid-n">${fmt(vN(k))}${facet!=="none"?" · "+FACETS[facet].fmt(vF(k,facet)):""}</span><span class="kid-bar" aria-hidden="true"><span style="width:${sh.toFixed(1)}%"></span>${I?`<i style="left:${shAll.toFixed(1)}%"></i>`:""}</span>${I?`<span class="sr-only">${pct(sh)} af institutionens samtaler her, alle 130: ${pct(shAll)}</span>`:""}</button></li>`;
+    }).join("")}${hid?`<li class="kid-hidden">${nd===TREE ? (hid===1?"1 tema":hid+" temaer") : (hid===1?"1 underklynge":hid+" underklynger")} med under ${MIN_N} samtaler fra institutionen vises ikke</li>`:""}</ul>`;
+  } else if(I){
+    html += `<p class="privacy-note">Institutionskortene viser kun klyngenavne og tal, ikke eksempler på resuméer, så ledelsen ikke kan genkende en bestemt sag eller medarbejder.</p>`;
+  } else {
+    html += `<h4 class="kids-h">Eksempler på anonyme resuméer (fiktive)</h4><ul class="examples">${nd.ex.map(e=>`<li>${e}</li>`).join("")}</ul>
+      <p class="privacy-note">I en rigtig opsætning kan vi vælge, at kun klyngenavne og tal er synlige, som i Clio, hvor analytikere ikke ser de enkelte resuméer.</p>`;
+  }
+  if(!I){
+    const top = nd.cnt.map((c,i)=>({c,i})).filter(o=>o.c>0).sort((a,b)=>b.c-a.c || a.i-b.i).slice(0,5);
+    html += `<h4 class="kids-h">Institutioner med flest samtaler her</h4><ul class="kids">${top.map(o=>`<li><button type="button" class="kid-btn inst-btn" data-inst="${o.i+1}" aria-label="Se institutionskortet for ${INST[o.i].label}, ${fmt(o.c)} samtaler her"><span class="kid-name">${INST[o.i].label}</span><span class="kid-n">${fmt(o.c)}</span></button></li>`).join("")}</ul>
+      <p class="privacy-note">Klik på en institution for at se dens eget kort.</p>`;
+  }
+  if(nd.depth>=2){ html += `<div class="panel-actions"><button type="button" class="btn up" data-go="root">Til toppen af kortet</button></div>`; }
+  panelEl.innerHTML = html;
+}
+
+const backBtn = $("#map-back"), whereEl = $("#map-where");
+function renderBar(){
+  const view = viewNode();
+  const pre = instSel ? INST[instSel-1].label : "Fælleskortet";
+  const hid = view.children.filter(k=>!visible(k)).length;
+  const hidTxt = hid ? ` · ${hid} ${view===TREE ? (hid===1?"tema":"temaer") : (hid===1?"underklynge":"underklynger")} under ${MIN_N} samtaler er skjult` : "";
+  if(selected===TREE){ backBtn.hidden = true; whereEl.textContent = `${pre} · klik på en boble for at zoome ind${hidTxt}`; return; }
+  backBtn.hidden = false;
+  backBtn.textContent = "Tilbage til " + shortOf(selected.parent);
+  whereEl.textContent = `${pre} · underklynger i ${view.short}${selected.children ? "" : ` · ${selected.short} er valgt`}${hidTxt}`;
+}
+function go(id){ selected = NODES[id]; hideTip(); renderMap(); renderPanel(); renderBar(); }
+function setInst(id){
+  instSel = id;
+  if(instSelEl.value !== String(id)) instSelEl.value = String(id);
+  while(selected!==TREE && !visible(selected)) selected = selected.parent;
+  hideTip(); renderMap(); renderPanel(); renderBar();
+}
+instSelEl.innerHTML = `<option value="0">Alle 130 institutioner (fælleskortet)</option><optgroup label="Institutionskort, største først">${
+  [...INST].sort((a,b)=>b.n-a.n || a.id-b.id).map(I=>`<option value="${I.id}">${I.label} · ${fmt(I.n)} samtaler</option>`).join("")}</optgroup>`;
+instSelEl.addEventListener("change", ()=>setInst(+instSelEl.value));
+backBtn.addEventListener("click", ()=>{ if(!selected.parent) return; go(selected.parent.id); if(backBtn.hidden){ const first=mapEl.querySelector(".bubble"); if(first) first.focus(); } else backBtn.focus(); });
+
+panelEl.addEventListener("click", e=>{
+  const b=e.target.closest("[data-go]"); if(b){ go(b.dataset.go); return; }
+  const s=e.target.closest("[data-inst]"); if(s){ setInst(+s.dataset.inst); instSelEl.focus(); }
+});
+mapEl.addEventListener("click", e=>{ const g=e.target.closest(".bubble"); if(g) go(g.dataset.id); });
+mapEl.addEventListener("keydown", e=>{ const g=e.target.closest(".bubble"); if(!g) return; if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(g.dataset.id); requestAnimationFrame(()=>{ const again = mapEl.querySelector(`[data-id="${g.dataset.id}"]`) || mapEl.querySelector(".bubble"); if(again) again.focus(); }); } if(e.key==="Escape"||e.key==="Backspace"){ if(selected.parent){ e.preventDefault(); go(selected.parent.id); const first=mapEl.querySelector(".bubble"); if(first) first.focus(); } } });
+
+function showTip(g, clientX, clientY){
+  const nd = NODES[g.dataset.id]; if(!nd) return;
+  const share = nd.parent ? pct(vN(nd)/Math.max(1,vN(nd.parent))*100) : "";
+  tipEl.innerHTML = `<b>${nd.name}</b>${fmt(vN(nd))} samtaler${nd.parent?` · ${share} af ${shortOf(nd.parent)}`:""}${facet!=="none"?`<br>${FACETS[facet].label}: ${FACETS[facet].fmt(vF(nd,facet))}`:""}<br>${nd.children?"Klik for at zoome ind":"Klik for detaljer"}`;
+  const cr = cardEl.getBoundingClientRect();
+  let x = clientX - cr.left + 14, y = clientY - cr.top + 14;
+  tipEl.classList.add("on");
+  const tw = tipEl.offsetWidth, th = tipEl.offsetHeight;
+  if(x+tw > cr.width-8) x = clientX - cr.left - tw - 14;
+  if(y+th > cr.height-8) y = clientY - cr.top - th - 14;
+  tipEl.style.left = Math.max(8,x)+"px"; tipEl.style.top = Math.max(8,y)+"px";
+}
+function hideTip(){ tipEl.classList.remove("on"); }
+mapEl.addEventListener("mousemove", e=>{ const g=e.target.closest(".bubble"); if(g) showTip(g, e.clientX, e.clientY); else hideTip(); });
+mapEl.addEventListener("mouseleave", hideTip);
+mapEl.addEventListener("focusin", e=>{ const g=e.target.closest(".bubble"); if(!g) return; const r=g.querySelector(".b").getBoundingClientRect(); showTip(g, r.left+r.width/2, r.top+r.height/2); });
+mapEl.addEventListener("focusout", hideTip);
+
+document.querySelectorAll("#color-seg [data-facet]").forEach(b=>b.addEventListener("click", ()=>{
+  facet = b.dataset.facet;
+  document.querySelectorAll("#color-seg [data-facet]").forEach(x=>x.setAttribute("aria-pressed", String(x===b)));
+  renderMap(); renderPanel();
+}));
+
+let rz=null; window.addEventListener("resize", ()=>{ clearTimeout(rz); rz=setTimeout(renderMap, 120); });
+if(window.matchMedia){ const mq=matchMedia("(prefers-color-scheme: dark)"); if(mq.addEventListener) mq.addEventListener("change", renderMap); }
+new MutationObserver(renderMap).observe(document.documentElement, {attributes:true, attributeFilter:["data-theme"]});
+
+/* ---------- compute-lommeregner (bud) ---------- */
+(function(){
+  const N=$("#calc-n"), C=$("#calc-c"), G=$("#calc-g"), P=$("#calc-p"), err=$("#calc-err");
+  if(!N) return;
+  const PROMPT=766, EXTRA=474, OUT=235, KW_PER_GPU=1.0;
+  const S={ low:{pre:12000,dec:1260,ovh:1.05}, mid:{pre:8000,dec:1000,ovh:1.15}, high:{pre:5000,dec:800,ovh:1.30} };
+  const gpuh=(n,c,s)=> n*((PROMPT+c+EXTRA)/s.pre + OUT/s.dec)*s.ovh/3600;
+  const num=v=> v<10 ? nf1.format(v) : fmt(v);
+  function dur(h){ if(h<1) return fmt(Math.max(1,h*60))+" min"; if(h<48) return nf1.format(h)+" timer"; return nf1.format(h/24)+" døgn"; }
+  const kr=v=> (v<100 ? nf1.format(v) : fmt(v))+" kr.";
+  function run(){
+    const n=+N.value, c=+C.value, g=+G.value;
+    const raw=String(P.value).trim().replace(/\s/g,"").replace(",",".");
+    const price=Number(raw);
+    if(raw==="" || !isFinite(price) || price<0 || price>50){
+      err.textContent="Skriv en elpris mellem 0 og 50 kr. pr. kWh, fx 2,00.";
+      err.hidden=false; P.setAttribute("aria-invalid","true"); return;
+    }
+    err.hidden=true; P.removeAttribute("aria-invalid");
+    const lo=gpuh(n,c,S.low), mi=gpuh(n,c,S.mid), hi=gpuh(n,c,S.high);
+    $("#calc-gpu").textContent=num(mi)+" GPU-timer";
+    $("#calc-gpu-r").textContent="interval "+num(lo)+"–"+num(hi);
+    $("#calc-wall").textContent=dur(mi/g);
+    $("#calc-wall-r").textContent=(g===1?"på ét kort":"fordelt på "+g+" kort")+", interval "+dur(lo/g)+"–"+dur(hi/g);
+    $("#calc-kwh").textContent=num(mi*KW_PER_GPU)+" kWh";
+    $("#calc-kwh-r").textContent="interval "+num(lo*KW_PER_GPU)+"–"+num(hi*KW_PER_GPU)+" kWh";
+    $("#calc-kr").textContent=kr(mi*KW_PER_GPU*price);
+    $("#calc-kr-r").textContent="ved "+new Intl.NumberFormat("da-DK",{minimumFractionDigits:2,maximumFractionDigits:2}).format(price)+" kr. pr. kWh";
+  }
+  [N,C,G].forEach(el=>el.addEventListener("change",run));
+  P.addEventListener("input",run);
+  run();
+})();
+
+/* ---------- start ---------- */
+select(0,false);
+renderMap(); renderPanel(); renderBar();
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(renderMap);
+})();
+</script>
+</body>
+</html>

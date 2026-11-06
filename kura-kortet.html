@@ -367,8 +367,8 @@ footer.site .about{display:grid;gap:10px;align-content:start}
 <div class="topnav">
   <div class="wrap">
     <nav aria-label="Sektioner">
-      <a href="#pipeline">Pipelinen</a>
       <a href="#demo">Klyngekortet</a>
+      <a href="#pipeline">Pipelinen</a>
       <a href="#hvorfor">Hvorfor det er smart</a>
       <a href="#compute">Compute</a>
       <a href="#forbehold">Forbehold</a>
@@ -386,26 +386,6 @@ footer.site .about{display:grid;gap:10px;align-content:start}
 </div>
 
 <main>
-  <section class="part band" id="pipeline" aria-labelledby="pipeline-h">
-    <div class="wrap">
-      <div class="part-head">
-        <h2 id="pipeline-h">Pipelinen trin for trin</h2>
-        <p>Pipelinen er de otte trin, der gør samtaler til et kort. Klik på et trin for at se, hvad der sker, og hvorfor det er smart. Et fiktivt eksempel følger én samtale, hvor en sagsbehandler får hjælp til et afslag, hele vejen igennem.</p>
-      </div>
-      <div class="roadmap">
-        <div class="stages">
-          <div class="legend-row" aria-label="Forklaring">
-            <span><span class="tag" data-type="llm">LLM</span>sprogmodel</span>
-            <span><span class="tag" data-type="ml">ML</span>klassisk maskinlæring</span>
-            <span><span class="tag" data-type="data">Data</span>data og visning</span>
-          </div>
-          <ol class="stage-list" id="stage-list"></ol>
-        </div>
-        <article class="detail" id="detail" aria-live="polite"></article>
-      </div>
-    </div>
-  </section>
-
   <section class="part" id="demo" aria-labelledby="demo-h">
     <div class="wrap">
       <div class="part-head">
@@ -439,6 +419,26 @@ footer.site .about{display:grid;gap:10px;align-content:start}
         <aside class="cl-panel" id="cl-panel" aria-live="polite"></aside>
       </div>
       <p class="note">Privatlivsregel i demoen: klynger med under 25 samtaler eller fra under 5 institutioner vises ikke (Clios aggregeringstærskel). Institutionstal og facetter er beregnet ud fra metadata og resuméernes felter.</p>
+    </div>
+  </section>
+
+  <section class="part band" id="pipeline" aria-labelledby="pipeline-h">
+    <div class="wrap">
+      <div class="part-head">
+        <h2 id="pipeline-h">Pipelinen trin for trin</h2>
+        <p>Pipelinen er de otte trin, der gør samtaler til et kort. Klik på et trin for at se, hvad der sker, og hvorfor det er smart. Et fiktivt eksempel følger én samtale, hvor en sagsbehandler får hjælp til et afslag, hele vejen igennem.</p>
+      </div>
+      <div class="roadmap">
+        <div class="stages">
+          <div class="legend-row" aria-label="Forklaring">
+            <span><span class="tag" data-type="llm">LLM</span>sprogmodel</span>
+            <span><span class="tag" data-type="ml">ML</span>klassisk maskinlæring</span>
+            <span><span class="tag" data-type="data">Data</span>data og visning</span>
+          </div>
+          <ol class="stage-list" id="stage-list"></ol>
+        </div>
+        <article class="detail" id="detail" aria-live="polite"></article>
+      </div>
     </div>
   </section>
 
